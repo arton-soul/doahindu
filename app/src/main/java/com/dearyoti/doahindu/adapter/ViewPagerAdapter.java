@@ -65,9 +65,6 @@ public class ViewPagerAdapter extends PagerAdapter {
             public void onClick(View view) {
                 Intent intent = new Intent(context, StoriesActivity.class);
                 intent.putExtra("topic_id", topicsModel.getTopic_id());
-                intent.putExtra("topic_name", topicsModel.getTopic_name());
-                intent.putExtra("topic_story", topicsModel.getTopic_story());
-                intent.putExtra("topic_image", topicsModel.getTopic_image());
                 intent.putExtra("flag", "from_latest");
                 context.startActivity(intent);
             }

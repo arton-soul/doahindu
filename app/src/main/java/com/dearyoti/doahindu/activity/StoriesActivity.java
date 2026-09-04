@@ -21,9 +21,10 @@ import androidx.core.content.ContextCompat;
 import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.model.LatestStoryModel;
+import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
 import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
-import com.dearyoti.doahindu.utils.MySharedPref;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -36,7 +37,6 @@ public class StoriesActivity extends AppCompatActivity {
 
     private TextView txtStoryTitle, txtStory;
     private ImageView navFavorite;
-    private MySharedPref mySharedPref;
     private DatabaseHelper db;
     private Integer selectedTopicId = 1, selectedCatId = 1;
     private String selectedCatName = "", selectedTopicName = "", selectedTopicStory = "", flag = "";
@@ -71,18 +71,29 @@ public class StoriesActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             selectedTopicId = intent.getIntExtra("topic_id", 1);
-            selectedCatId = intent.getIntExtra("cat_id", 1);
-            selectedTopicName = intent.getStringExtra("topic_name");
-            selectedTopicStory = intent.getStringExtra("topic_story");
             flag = intent.getStringExtra("flag");
-            imageBytes = getIntent().getByteArrayExtra("topic_image");
         }
     }
 
     private void init() {
         db = new DatabaseHelper(StoriesActivity.this);
-        mySharedPref = new MySharedPref();
-        selectedCatName = "" + db.getCategoryName(selectedCatId);
+        if ("from_latest".equals(flag)) {
+            LatestStoryModel latestStory = db.getLatestStoryById(selectedTopicId);
+            if (latestStory != null) {
+                selectedTopicName = latestStory.getTopic_name();
+                selectedTopicStory = latestStory.getTopic_story();
+                imageBytes = latestStory.getTopic_image();
+            }
+        } else {
+            TopicsModel topic = db.getTopicById(selectedTopicId);
+            if (topic != null) {
+                selectedCatId = topic.getCat_id();
+                selectedTopicName = topic.getTopic_name();
+                selectedTopicStory = topic.getTopic_story();
+                imageBytes = topic.getTopic_image();
+            }
+            selectedCatName = db.getCategoryName(selectedCatId);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_stories);
         setSupportActionBar(toolbar);
@@ -134,7 +145,6 @@ public class StoriesActivity extends AppCompatActivity {
         if (selectedTopicId != null && selectedTopicId != 0) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             db.updateLastViewed(selectedTopicId, timestamp.toString());
-            mySharedPref.setRecentViewedTopicId(this, db);
         }
     }
 
@@ -171,7 +181,6 @@ public class StoriesActivity extends AppCompatActivity {
                         Snackbar.make(view, "Story added to favorite.", Snackbar.LENGTH_LONG).show();
                     }
                 }
-                mySharedPref.setFavoriteTopicId(StoriesActivity.this, db);
                 isFavorite();
             }
         });

@@ -39,14 +39,11 @@ import com.dearyoti.doahindu.fragment.FavoriteFragment;
 import com.dearyoti.doahindu.fragment.HomeFragment;
 import com.dearyoti.doahindu.fragment.PolicyFragment;
 import com.dearyoti.doahindu.fragment.RecentFragment;
-import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
 import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
-import com.dearyoti.doahindu.utils.MySharedPref;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -57,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView txtToolbarTitle;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private DatabaseHelper db;
-    private MySharedPref mySharedPref;
     private MenuItem mMenuItem;
     public SearchView searchView;
     private FavoriteFragment favoriteFragment;
@@ -112,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         db = new DatabaseHelper(this);
-        mySharedPref = new MySharedPref();
 
         txtToolbarTitle = findViewById(R.id.txt_toolbar_title);
         Typeface font = Typeface.createFromAsset(getAssets(), Constant.FONT_PATH_SEMIBOLD);
@@ -243,19 +238,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void insertData() {
         try {
             db.copyDataBase();
-            if (mySharedPref.getFavorites(MainActivity.this) != null) {
-                ArrayList<Integer> topicIdFavorite = mySharedPref.getFavorites(MainActivity.this);
-                for (int i = 0; i < topicIdFavorite.size(); i++) {
-                    db.updateFavorite(topicIdFavorite.get(i), 1);
-                }
-            }
-            if (mySharedPref.getRecentViewed(MainActivity.this) != null) {
-                ArrayList<TopicsModel> topicsRecent = mySharedPref.getRecentViewed(MainActivity.this);
-                for (int i = 0; i < topicsRecent.size(); i++) {
-                    TopicsModel topicsModel = topicsRecent.get(i);
-                    db.updateLastViewed(topicsModel.getTopic_id(), topicsModel.getLast_viewed());
-                }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

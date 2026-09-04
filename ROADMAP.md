@@ -121,20 +121,20 @@ Kriteria selesai:
 
 Tujuan: memisahkan konten aplikasi dari data pribadi pengguna dan membuat migrasi aman.
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 3.
-- [ ] Menentukan apakah menggunakan Room atau tetap memakai SQLite dengan lapisan repository.
-- [ ] Menetapkan ID konten permanen yang tidak berubah antarversi.
-- [ ] Memisahkan database konten dari data pengguna.
-- [ ] Memindahkan favorit ke penyimpanan lokal pengguna yang terpisah.
-- [ ] Memindahkan riwayat baca ke penyimpanan lokal pengguna yang terpisah.
-- [ ] Menghindari penyimpanan objek konten lengkap di SharedPreferences.
-- [ ] Menambahkan nomor versi skema database.
-- [ ] Menambahkan strategi migrasi dari struktur lama.
-- [ ] Menambahkan indeks untuk relasi kategori, pencarian, dan urutan.
+- [x] Mendapatkan persetujuan untuk memulai Fase 3.
+- [x] Menentukan tetap memakai SQLite dengan lapisan akses terpisah untuk meminimalkan risiko migrasi.
+- [x] Menetapkan `topic_id` sebagai ID konten permanen yang tidak berubah antarversi.
+- [x] Memisahkan database konten dari data pengguna.
+- [x] Memindahkan favorit ke penyimpanan lokal pengguna yang terpisah.
+- [x] Memindahkan riwayat baca ke penyimpanan lokal pengguna yang terpisah.
+- [x] Menghindari penyimpanan objek konten lengkap baru di SharedPreferences; pembaca format lama dipertahankan untuk migrasi.
+- [x] Menambahkan nomor versi skema database pengguna.
+- [x] Menambahkan strategi migrasi satu kali dari struktur lama.
+- [x] Menambahkan indeks untuk relasi kategori, pencarian, dan urutan.
 - [ ] Mengaktifkan serta menguji foreign key.
 - [ ] Memindahkan operasi database dari main/UI thread.
-- [ ] Mengganti query pencarian concatenation dengan parameter query.
-- [ ] Mengubah navigasi detail agar hanya mengirim ID, bukan BLOB dan isi doa melalui Intent.
+- [x] Mengganti query pencarian concatenation dengan parameter query.
+- [x] Mengubah navigasi detail agar hanya mengirim ID, bukan BLOB dan isi doa melalui Intent.
 - [ ] Menambahkan migration test dan repository test.
 
 Kriteria selesai:
@@ -489,6 +489,28 @@ Catatan/risiko tersisa:
 - Status: implementasi dan verifikasi Fase 2 pada ponsel selesai
 - Pengujian tambahan yang tetap terbuka: TalkBack, display cutout, multi-window, serta tablet/foldable
 - Catatan: pengaturan ukuran teks khusus isi doa belum dibuat karena merupakan fitur opsional yang memerlukan persetujuan tersendiri
+
+### Entri 9 — Fase 3: Pemisahan Database Konten dan Data Pengguna
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: Fase 3 disetujui
+- Keputusan arsitektur: tetap menggunakan SQLite agar migrasi aplikasi lama lebih kecil dan database konten mudah diganti pada Fase 4
+- Database konten: `doahindu1.sqlite` dipertahankan sebagai sumber doa offline
+- Database pengguna: menambahkan `doahindu_user.sqlite` versi 1 dengan tabel `user_favorite` dan `user_recent`
+- Migrasi: saat startup pertama, favorit dan riwayat dibaca dari kolom database konten serta SharedPreferences lama, kemudian disalin satu kali ke database pengguna
+- Kompatibilitas: pembaca SharedPreferences lama dipertahankan hanya untuk migrasi; aplikasi tidak lagi menulis objek doa lengkap ke SharedPreferences
+- ID permanen: `topic_id` menjadi kontrak penghubung antara konten, favorit, dan riwayat
+- Indeks: menambahkan indeks kategori topik, nama topik, latest story, dan urutan riwayat
+- Query: pencarian dan lookup ID memakai selection arguments
+- Navigasi detail: Intent hanya membawa `topic_id` dan flag sumber; judul, isi, kategori, dan gambar dibaca kembali dari database
+- Perbaikan tambahan: status favorit pada adapter kini memakai ID item yang sedang di-bind, bukan field ID bersama
+- Build debug: berhasil
+- Unit test: 1 test template lulus, tanpa failure/error
+- Lint: berhasil dengan 0 error dan 54 warning, sama dengan hasil akhir Fase 2
+- Uji perangkat fisik: upgrade APK ditolak Android karena tanda tangan APK terpasang berbeda; aplikasi/data lama tidak dihapus
+- Uji emulator: mengalami kendala tanda tangan yang sama pada paket lama; tidak dilakukan uninstall agar data pengujian tidak dihapus tanpa persetujuan
+- Pengujian tersisa: migrasi dengan signing key yang sama, pengujian repository/migrasi otomatis, dan pemindahan operasi database dari UI thread
+- Status: fondasi pemisahan data selesai; Fase 3 masih berjalan
 
 ## Catatan Rilis
 

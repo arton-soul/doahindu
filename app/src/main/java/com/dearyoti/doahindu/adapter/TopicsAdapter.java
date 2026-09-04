@@ -19,7 +19,6 @@ import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.activity.StoriesActivity;
 import com.dearyoti.doahindu.database.DatabaseHelper;
 import com.dearyoti.doahindu.model.TopicsModel;
-import com.dearyoti.doahindu.utils.MySharedPref;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     private Context context;
     private View view;
     private ArrayList<TopicsModel> topicsList;
-    private MySharedPref mySharedPref;
     private DatabaseHelper db;
     private itemInterface itemInter;
     private Integer selectedTopicId;
@@ -52,7 +50,6 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     public TopicsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item, parent, false);
         db = new DatabaseHelper(context);
-        mySharedPref = new MySharedPref();
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -69,18 +66,13 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         }
         holder.txtTopicName.setText("" + topicsModel.getTopic_name());
 
-        selectedTopicId = topicsModel.getTopic_id();
-        isFavorite(holder);
+        isFavorite(holder, topicsModel.getTopic_id());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, StoriesActivity.class);
                 intent.putExtra("topic_id", topicsModel.getTopic_id());
-                intent.putExtra("cat_id", topicsModel.getCat_id());
-                intent.putExtra("topic_name", topicsModel.getTopic_name());
-                intent.putExtra("topic_story", topicsModel.getTopic_story());
                 intent.putExtra("flag", "from_topic");
-                intent.putExtra("topic_image", topicsModel.getTopic_image());
                 context.startActivity(intent);
             }
         });
@@ -101,14 +93,13 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
                         Snackbar.make(view, "Story added to favorite.", Snackbar.LENGTH_LONG).show();
                     }
                 }
-                mySharedPref.setFavoriteTopicId(context, db);
-                isFavorite(holder);
+                isFavorite(holder, selectedTopicId);
             }
         });
     }
 
-    private void isFavorite(ViewHolder holder) {
-        if (db.isFavorite(selectedTopicId)) {
+    private void isFavorite(ViewHolder holder, int topicId) {
+        if (db.isFavorite(topicId)) {
             holder.imgTopicBookmark.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.favorite_select));
             holder.imgTopicBookmark.setContentDescription(
                     context.getString(R.string.action_remove_favorite));
