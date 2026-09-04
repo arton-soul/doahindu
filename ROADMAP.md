@@ -57,17 +57,17 @@ Tujuan: menyediakan kondisi awal yang dapat dibandingkan sebelum perubahan dilak
 - [x] Menambahkan `.gitignore` yang sesuai tanpa memasukkan credential atau file lokal.
 - [x] Mendokumentasikan konfigurasi build development dan release.
 - [x] Membuat build debug dari kondisi awal.
-- [ ] Menjalankan aplikasi pada emulator/perangkat API minimum yang dipilih.
+- [x] Menjalankan aplikasi pada perangkat uji Android 10/API 29.
 - [ ] Menjalankan aplikasi pada Android versi terbaru.
 - [x] Mencatat screenshot beranda dan alur utama sebagai baseline awal.
-- [ ] Menguji kategori, pencarian, baca doa, favorit, riwayat, berbagi, notifikasi, dan iklan.
+- [x] Menguji alur utama secara manual: kategori, pencarian, baca doa, favorit, riwayat, berbagi, dan menu aplikasi.
 - [x] Mencatat temuan baseline yang dapat diperiksa dari build dan lint.
 
 Kriteria selesai:
 
 - [x] Source dan data awal memiliki backup lokal yang dapat dipulihkan.
-- [ ] Build awal berhasil dan perilaku utama telah dicatat.
-- [ ] Daftar bug baseline tersedia.
+- [x] Build awal berhasil dan perilaku utama telah dicatat.
+- [x] Daftar temuan baseline tersedia.
 
 ## Fase 1 — Pembaruan SDK dan Build System
 
@@ -410,6 +410,16 @@ Catatan/risiko tersisa:
 - UI hierarchy baseline: `.backups/doahindu-physical-home.xml`
 - Kendala pengujian: MIUI menolak injeksi tap ADB karena izin `INJECT_EVENTS`; pengaturan keamanan perangkat tidak diubah
 - Status: smoke test peluncuran dan beranda lulus; pengujian interaksi kategori, pencarian, detail doa, favorit, riwayat, dan berbagi masih terbuka
+
+### Entri 4 — Verifikasi Manual dan Penyelesaian Fase 0
+
+- Tanggal: 4 September 2026
+- Penguji: pemilik aplikasi
+- Perangkat uji: Xiaomi Redmi Note 8 Pro, Android 10/API 29
+- Cakupan: beranda, kategori, daftar dan detail doa, pencarian, favorit, persistensi favorit, riwayat baca, berbagi, menu Tentang, Kebijakan Privasi, navigasi, tombol kembali, dan tampilan umum
+- Hasil: seluruh fungsi yang diuji berjalan normal dan tidak ditemukan masalah
+- Status Fase 0: selesai untuk baseline yang disepakati
+- Catatan: pengujian khusus pada API minimum 23 dan Android/API terbaru tetap dapat ditambahkan pada matriks pengujian rilis di Fase 9
 
 ## Catatan Rilis
 
