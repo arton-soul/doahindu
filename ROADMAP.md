@@ -58,7 +58,7 @@ Tujuan: menyediakan kondisi awal yang dapat dibandingkan sebelum perubahan dilak
 - [x] Mendokumentasikan konfigurasi build development dan release.
 - [x] Membuat build debug dari kondisi awal.
 - [x] Menjalankan aplikasi pada perangkat uji Android 10/API 29.
-- [ ] Menjalankan aplikasi pada Android versi terbaru.
+- [x] Menjalankan aplikasi pada emulator Android 15/API 35 dengan target API 36.
 - [x] Mencatat screenshot beranda dan alur utama sebagai baseline awal.
 - [x] Menguji alur utama secara manual: kategori, pencarian, baca doa, favorit, riwayat, berbagi, dan menu aplikasi.
 - [x] Mencatat temuan baseline yang dapat diperiksa dari build dan lint.
@@ -322,20 +322,20 @@ Kriteria selesai:
 
 ## Fase 9 — Pengujian dan Persiapan Rilis
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 9.
+- [x] Mendapatkan persetujuan untuk memulai Fase 9.
 - [ ] Menambahkan unit test query dan repository.
-- [ ] Menambahkan database migration test.
-- [ ] Menambahkan test pembaruan konten dan rollback.
+- [x] Menambahkan database migration test.
+- [x] Menambahkan test pembaruan konten dan rollback.
 - [ ] Menambahkan UI test untuk alur utama.
-- [ ] Menguji instalasi baru.
+- [x] Menguji instalasi baru pada emulator API 35.
 - [ ] Menguji upgrade dari versi aplikasi sebelumnya.
 - [ ] Menguji kondisi offline, internet lambat, dan unduhan terputus.
 - [ ] Menguji rotasi, multi-window, tablet, dan foldable.
 - [ ] Menguji TalkBack dan ukuran font besar.
 - [ ] Menguji notifikasi pada Android yang didukung.
-- [ ] Menguji iklan test sebelum menggunakan unit iklan produksi.
-- [ ] Menjalankan Android lint dan meninjau hasilnya.
-- [ ] Menguji release build dengan R8/minification.
+- [x] Menguji iklan test sebelum menggunakan unit iklan produksi.
+- [x] Menjalankan Android lint dan meninjau hasilnya.
+- [x] Menguji release build dengan R8/minification.
 - [ ] Memperbarui version code, version name, changelog, dan store listing.
 - [ ] Memastikan backup rilis dan mapping R8 tersimpan aman.
 - [ ] Melakukan staged rollout jika tersedia.
@@ -722,6 +722,21 @@ Catatan/risiko tersisa:
 - Uji deep link: intent notifikasi simulasi dengan `topic_id=5` melewati `SplashActivity` dan berhasil membuka `StoriesActivity` pada perangkat fisik
 - Verifikasi manual: pemilik menguji consent/privasi iklan, opt-in notifikasi, kebijakan privasi, frekuensi interstitial, dan alur membaca pada perangkat; hasil dinyatakan baik
 - Status Fase 8: implementasi, konfigurasi eksternal, dokumentasi, pengujian otomatis, dan verifikasi perangkat selesai
+
+### Entri 22 — Audit Awal dan Uji Offline Fase 9
+
+- Tanggal: 5 September 2026
+- Persetujuan pemilik: Fase 9 disetujui untuk dimulai
+- Persyaratan Play: target API 36 memenuhi persyaratan aplikasi/update ponsel yang berlaku sejak 31 Agustus 2026
+- Build: debug dan unit test berhasil; `bundleRelease` dengan R8 berhasil menghasilkan `app-release.aab` sekitar 12,4 MB serta mapping R8
+- Signing: AAB dan APK release belum ditandatangani; proyek belum memiliki `signingConfig` atau upload keystore
+- Versi: masih `versionCode 12` dan `versionName 3.4.1`; versi berikutnya belum ditetapkan dan harus lebih tinggi daripada artefak aktif di Play Console
+- Instalasi bersih: data aplikasi pada emulator API 35 dihapus, APK debug dipasang kembali, dan database bawaan dapat diinisialisasi
+- Offline: startup instalasi bersih tanpa Wi-Fi/data berhasil masuk ke `MainActivity` tanpa crash atau `SQLiteException`
+- Perbaikan: `SplashActivity` mendapat timeout consent lima detik agar kegagalan atau lambatnya jaringan UMP tidak menahan fungsi offline; iklan tidak dimuat bila consent belum tersedia
+- Regresi: lint berhasil dengan 0 error dan 59 warning; 8 instrumented test kembali lulus pada Redmi Note 8 Pro/API 29 dan emulator/API 35 setelah perbaikan startup
+- Upgrade: upgrade debug pada perangkat fisik sudah teruji, tetapi upgrade nyata dari versi Play belum dapat divalidasi tanpa signing key yang sama
+- Blocker rilis: perlu memastikan status aplikasi lama di Play Console, `versionCode` aktif tertinggi, dan ketersediaan upload/app signing key lama
 
 ## Catatan Rilis
 
