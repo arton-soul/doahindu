@@ -184,11 +184,11 @@ Database konten offline aktif
 - [x] Mempertahankan database bawaan APK untuk penggunaan offline pertama.
 - [x] Menambahkan pemeriksaan otomatis harian dan pemeriksaan manual melalui menu.
 - [x] Menambahkan GitHub Actions untuk validasi dan publikasi paket konten ke GitHub Pages.
-- [ ] Menguji pembaruan normal, gagal unduh, checksum salah, skema salah, dan rollback.
+- [x] Menguji pembaruan normal melalui GitHub Pages serta gagal unduh/non-HTTPS, checksum salah, skema salah, dan rollback melalui instrumented test.
 
 Kriteria selesai:
 
-- [ ] Konten dapat diperbarui tanpa update APK.
+- [x] Konten dapat diperbarui tanpa update APK berdasarkan pengujian `contentVersion 1` ke `contentVersion 2` pada emulator.
 - [x] Aplikasi tetap dapat dibuka tanpa internet.
 - [x] Paket rusak atau tidak sah tidak pernah menggantikan database aktif berdasarkan instrumented test.
 - [x] Favorit, riwayat, dan pengaturan pengguna tetap utuh berdasarkan pemisahan database dan instrumented test.
@@ -559,7 +559,22 @@ Catatan/risiko tersisa:
 - Perubahan: mengisi `CONTENT_MANIFEST_URL` dan menyesuaikan dokumentasi publikasi
 - Upload: seluruh riwayat proyek berhasil diunggah ke branch `main`; remote lokal `origin` melacak `origin/main`
 - Verifikasi GitHub: repositori publik dengan default branch `main` dan workflow publikasi sudah dikenali GitHub
-- Status GitHub Pages: belum ada workflow run dan endpoint manifest belum terbit; pemilik perlu mengaktifkan Pages dengan sumber GitHub Actions, kemudian workflow dijalankan kembali
+- GitHub Pages: aktif; workflow publikasi pertama selesai sukses dan endpoint manifest dapat diakses
+
+### Entri 13 — Uji Pembaruan Konten Nyata melalui GitHub Pages
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: pengujian Fase 4 dilanjutkan
+- Workflow: run #2 selesai sukses dan menerbitkan `contentVersion 2`
+- Manifest publik: HTTP 200, `schemaVersion 1`, `contentVersion 2`, dan `minimumAppVersion 12`
+- Paket publik: `content-v2.sqlite`; ukuran file dan SHA-256 hasil unduhan cocok dengan manifest
+- Perangkat uji: emulator Android 15/API 35; perangkat fisik tidak disentuh
+- Hasil aplikasi: pembaruan otomatis melalui internet berhasil memasang versi konten 2 tanpa update APK
+- Bukti aktivasi: preferensi `content_version=2`, database konten aktif tersedia, dan file `.backup` versi sebelumnya terbentuk
+- Data pengguna: `doahindu_user.sqlite` tetap terpisah dan tersedia setelah pembaruan
+- Stabilitas: proses aplikasi tetap berjalan dan tidak ditemukan fatal exception atau crash updater
+- Catatan teknis: log SQLite mencatat `file renamed while open` ketika aktivasi; relaunch berhasil, tetapi koneksi database perlu ditutup secara eksplisit sebelum penggantian pada perbaikan berikutnya
+- Status Fase 4: seluruh fungsi dan kriteria utama selesai; perbaikan warning koneksi terbuka direkomendasikan sebelum rilis produksi
 
 ## Catatan Rilis
 
