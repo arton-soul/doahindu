@@ -139,11 +139,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<TopicsModel> list = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + Constant.TBL_TOPICS
                 + " WHERE " + Constant.TBL_CATEGORY_COLUMN_ID + " = ? AND "
-                + Constant.TBL_TOPIC_COLUMN_NAME + " LIKE ?";
+                + Constant.TBL_TOPIC_COLUMN_NAME + " LIKE ? AND "
+                + Constant.TBL_TOPIC_COLUMN_STORIES + " <> ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(selected_cat_id),
-                "%" + searched_topic_name + "%"});
+                "%" + searched_topic_name + "%", Constant.PLACEHOLDER_CONTENT});
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -176,7 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<TopicsModel> list = new ArrayList<>();
         for (Map.Entry<Integer, String> entry : userDatabase.getRecentItems(10).entrySet()) {
             TopicsModel topic = getTopicById(entry.getKey());
-            if (topic != null) {
+            if (topic != null && !Constant.PLACEHOLDER_CONTENT.equals(topic.getTopic_story())) {
                 topic.setLast_viewed(entry.getValue());
                 list.add(topic);
             }
@@ -192,7 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<TopicsModel> list = new ArrayList<>();
         for (Integer topicId : userDatabase.getFavoriteIds(collectionId)) {
             TopicsModel topic = getTopicById(topicId);
-            if (topic != null) {
+            if (topic != null && !Constant.PLACEHOLDER_CONTENT.equals(topic.getTopic_story())) {
                 list.add(topic);
             }
         }
@@ -237,10 +238,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<TopicsModel> getAllTopicsByCategory(Integer cat_id) {
         ArrayList<TopicsModel> list = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + Constant.TBL_TOPICS + " WHERE "
-                + Constant.TBL_CATEGORY_COLUMN_ID + " = ?";
+                + Constant.TBL_CATEGORY_COLUMN_ID + " = ? AND "
+                + Constant.TBL_TOPIC_COLUMN_STORIES + " <> ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(cat_id)});
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(cat_id),
+                Constant.PLACEHOLDER_CONTENT});
 
         if (cursor.moveToFirst()) {
             do {

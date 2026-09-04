@@ -66,6 +66,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
 
         TopicsModel topicsModel = topicsList.get(position);
 
+        holder.imgTopicImage.setImageDrawable(null);
         if (topicsList.get(position).getTopic_image() != null) {
             byte[] res = topicsModel.getTopic_image();
             Bitmap bitmap = BitmapFactory.decodeByteArray(res, 0, res.length);

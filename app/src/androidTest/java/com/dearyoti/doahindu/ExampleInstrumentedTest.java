@@ -30,6 +30,24 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     @Test
+    public void hidesPlaceholdersAndKeepsTheirStableIds() throws Exception {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.deleteDatabase(Constant.DB_NAME);
+        DatabaseHelper database = new DatabaseHelper(context);
+        database.copyDataBase();
+        assertTrue(database.getAllCategories().stream()
+                .anyMatch(category -> "Sarasamuccaya".equals(category.getCat_name())));
+        assertTrue(database.getAllTopicsByCategory(7).isEmpty());
+        assertTrue(database.getSearchTopics(7, "Sarasamuccaya").isEmpty());
+        TopicsModel retained = database.getTopicById(20);
+        assertEquals("Sarasamuccaya 3", retained.getTopic_name());
+        assertEquals(Constant.PLACEHOLDER_CONTENT, retained.getTopic_story());
+        assertEquals(null, database.getTopicById(19).getTopic_image());
+        assertEquals("Pupuh Sinom", database.getTopicById(67).getTopic_name());
+        database.close();
+    }
+
+    @Test
     public void upgradesUserDatabaseV1IntoDefaultCollection() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DatabaseHelper.closeAllInstances();

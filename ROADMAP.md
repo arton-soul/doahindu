@@ -200,7 +200,7 @@ Tujuan: meningkatkan mutu, konsistensi, dan keterlacakan isi doa.
 
 - [x] Mendapatkan persetujuan untuk memulai audit Fase 5.
 - [x] Memeriksa duplikat `Sarascamuscaya 3`; ditemukan pada ID 20 dan 21 dengan isi placeholder identik.
-- [ ] Memverifikasi ejaan `Sarascamuscaya` atau `Sarasamuccaya` dengan editor konten.
+- [x] Menetapkan dan menerapkan ejaan `Sarasamuccaya` pada kategori dan seluruh judul terkait berdasarkan keputusan pemilik.
 - [x] Memvalidasi seluruh BLOB gambar berukuran sangat kecil; 52 topik hanya menyimpan signature PNG 8 byte, bukan gambar lengkap.
 - [x] Memeriksa doa yang sangat pendek; ID 18–21 berisi placeholder identik 48 karakter, bukan konten final.
 - [ ] Menambahkan sumber/referensi pada setiap konten jika tersedia.
@@ -217,6 +217,13 @@ Kriteria selesai:
 - [ ] Tidak ada gambar rusak atau isi terpotong.
 - [ ] Konten memiliki identitas permanen dan metadata minimum.
 - [ ] Konten yang dipublikasikan telah melalui pemeriksaan editorial.
+
+Keputusan editorial sementara:
+
+- [x] Mempertahankan ID 20 dan 21 agar dapat diisi melalui pembaruan GitHub mendatang.
+- [x] Menyembunyikan ID 18–21 selama isinya masih sama dengan placeholder pengerjaan.
+- [x] Menghapus data 52 BLOB PNG rusak menjadi `NULL` dan mempertahankan 7 gambar lengkap.
+- [x] Memperbaiki `Pupuh  Sinom` menjadi `Pupuh Sinom`.
 
 ## Fase 6 — Fitur Membaca dan Pencarian
 
@@ -653,6 +660,20 @@ Catatan/risiko tersisa:
 - Cerita terbaru: tiga entri merupakan tabel/konten mandiri; ID-nya tidak harus merujuk `tbl_topics`, sehingga `Kutukan Ekalaya` tidak langsung dinyatakan rusak
 - Perubahan konten/database: tidak ada
 - Keputusan tersisa: tindakan pada duplikat ID 21, ejaan judul/kategori, placeholder ID 18–21, strategi gambar kosong, dan spasi ganda menunggu persetujuan editorial
+
+### Entri 19 — Penerapan Keputusan Editorial Awal Fase 5
+
+- Tanggal: 5 September 2026
+- Persetujuan pemilik: ID duplikat dipertahankan, ejaan diubah ke `Sarasamuccaya`, placeholder disembunyikan, gambar rusak boleh dihapus bila tidak berfungsi, dan spasi ganda diperbaiki
+- Backup database: `.backups/doahindu-before-phase5-edit-20260905.sqlite`, hash sama dengan source sebelum perubahan
+- Ejaan: kategori dan judul ID 18–21 menggunakan `Sarasamuccaya`
+- Placeholder: record dan ID 18–21 tetap berada di SQLite tetapi tidak tampil pada daftar, pencarian, favorit, atau riwayat selama isinya sama dengan placeholder
+- Gambar: 52 BLOB yang hanya berisi signature PNG 8 byte diubah menjadi `NULL`; 7 PNG lengkap dipertahankan
+- UI gambar: thumbnail selalu direset saat binding agar item tanpa gambar tidak menampilkan gambar bekas dari item lain
+- Penamaan: `Pupuh  Sinom` diperbaiki menjadi `Pupuh Sinom`
+- Build debug, unit test, dan lint: berhasil; lint 0 error dan 55 warning
+- Instrumented test: 5 test lulus pada emulator Android 15/API 35; mencakup ejaan, filter placeholder, ID stabil, gambar NULL, migrasi pengguna, dan updater
+- Catatan: ID 20 dan 21 sengaja tetap memiliki judul sama sampai konten final diberikan; materi doa tidak ditulis atau diubah selain keputusan penamaan di atas
 
 ## Catatan Rilis
 

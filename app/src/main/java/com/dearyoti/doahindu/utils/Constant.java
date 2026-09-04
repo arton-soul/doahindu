@@ -21,6 +21,8 @@ public class Constant {
     public static final String TBL_TOPIC_COLUMN_STORIES = "topic_stories";
     public static final String TBL_TOPIC_COLUMN_ISFAVORITE = "topic_stories_isfav";
     public static final String TBL_TOPIC_COLUMN_LASTVIEWED = "topic_last_viewed";
+    public static final String PLACEHOLDER_CONTENT =
+            "Masih dalam pengerjaan, tunggu update berikutnya";
 
     public static final String FONT_PATH_SEMIBOLD = "fonts/montserrat_semibold.ttf";
     public static final String FONT_PATH_REGULAR = "fonts/montserrat_regular.ttf";

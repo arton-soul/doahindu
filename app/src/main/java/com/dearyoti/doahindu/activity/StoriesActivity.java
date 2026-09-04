@@ -151,6 +151,7 @@ public class StoriesActivity extends AppCompatActivity {
                     ? "Cerita Hindu" : selectedCatName);
             txtStory.setText(selectedTopicStory);
             txtStoryTitle.setText(selectedTopicName);
+            imgTopic.setImageDrawable(null);
             if (imageBytes != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
                 imgTopic.setImageBitmap(bitmap);
