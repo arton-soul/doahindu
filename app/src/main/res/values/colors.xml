@@ -6,6 +6,7 @@
     <color name="colorAccent">#dedede</color>
 
     <color name="white">#ffffff</color>
+    <color name="surface_color">#ffffff</color>
     <color name="background_round">#cccccc</color>
 
     <color name="text_color">#1d1d1d</color>

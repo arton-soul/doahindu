@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
@@ -10,7 +11,8 @@
     <ImageView
         android:layout_width="@dimen/_140sdp"
         android:layout_height="@dimen/_110sdp"
-        android:src="@drawable/ic_splash_icon"></ImageView>
+        android:contentDescription="@null"
+        android:src="@drawable/ic_splash_icon" />
 
     <TextView
         android:id="@+id/name"
@@ -20,5 +22,5 @@
         android:gravity="center"
         android:text="@string/splash_name"
         android:textColor="@color/white"
-        android:textSize="40sp"></TextView>
+        android:textSize="40sp" />
 </LinearLayout>

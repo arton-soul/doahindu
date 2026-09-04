@@ -22,6 +22,7 @@ import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.database.DatabaseHelper;
 import com.dearyoti.doahindu.utils.Constant;
+import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
 import com.dearyoti.doahindu.utils.MySharedPref;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -58,6 +59,7 @@ public class StoriesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stories);
+        EdgeToEdgeHelper.apply(this, findViewById(R.id.stories_root));
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
 
         getIntentData();
@@ -139,8 +141,10 @@ public class StoriesActivity extends AppCompatActivity {
     private void isFavorite() {
         if (db.isFavorite(selectedTopicId)) {
             navFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.favorite_select));
+            navFavorite.setContentDescription(getString(R.string.action_remove_favorite));
         } else {
             navFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.favorite_unselect));
+            navFavorite.setContentDescription(getString(R.string.action_add_favorite));
         }
     }
 

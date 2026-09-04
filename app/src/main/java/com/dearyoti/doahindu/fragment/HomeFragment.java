@@ -140,7 +140,8 @@ public class HomeFragment extends
     }
 
     public void setAdapter() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3) {
+        int columnCount = getResources().getInteger(R.integer.category_grid_columns);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), columnCount) {
             @Override
             public boolean canScrollVertically() {
                 return false;

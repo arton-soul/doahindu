@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:background="@color/white"
+        android:background="@color/surface_color"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
@@ -28,11 +28,13 @@
                 android:id="@+id/img_view_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/topic_image"
                 android:scaleType="fitXY" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:layout_below="@+id/img_view_item"
                 android:layout_marginTop="-100dp"
                 android:scaleType="fitXY"
@@ -43,11 +45,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="25dp"
                 android:maxLines="1"
-                android:text="Moral"
+                android:text="@string/title_activity_topic"
                 android:textColor="@color/white"
                 android:textSize="@dimen/item_text_detail" />
         </RelativeLayout>

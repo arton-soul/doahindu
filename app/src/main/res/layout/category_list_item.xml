@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:background="@color/white"
+    android:background="@color/surface_color"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:divider="@android:color/transparent"
@@ -26,17 +26,17 @@
             android:layout_height="@dimen/_55sdp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
+            android:contentDescription="@string/category_image"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/txt_category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/img_category"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="5dp"
-            android:text="Kategori"
+            android:text="@string/category_text"
             android:textColor="@color/text_color"
             android:textSize="@dimen/item_medium_text" />
     </LinearLayout>

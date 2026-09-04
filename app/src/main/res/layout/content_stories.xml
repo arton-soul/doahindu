@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/white"
+            android:background="@color/surface_color"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:divider="@android:color/transparent"
@@ -50,6 +50,7 @@
                             android:id="@+id/img_topic"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:contentDescription="@string/topic_image"
                             android:src="@mipmap/ic_launcher" />
 
                     </androidx.cardview.widget.CardView>
@@ -60,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_margin="10dp"
-                        android:layout_toRightOf="@+id/card_img_detail"
+                        android:layout_toEndOf="@+id/card_img_detail"
                         android:text="@string/app_name"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/item_semi_medium_text" />
@@ -70,10 +71,10 @@
                     android:id="@+id/txt_story"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="best app for story"
+                    android:text="@string/story_placeholder"
                     android:textSize="@dimen/item_medium_text" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -84,9 +85,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/banner_ads"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_margin="20dp"
         android:scaleType="center"
+        android:contentDescription="@string/action_share"
         android:src="@drawable/ic_share"
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="auto"

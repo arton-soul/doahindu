@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topic_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
@@ -15,8 +16,11 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             app:popupTheme="@style/Theme.MyStories.PopupOverlay"
             app:theme="@style/myToolbarStyleTopic">
 
@@ -26,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="topic"
+                android:text="@string/title_activity_topic"
                 android:textAppearance="@style/textAppearanceToolbar"
                 android:textColor="@color/white" />
 

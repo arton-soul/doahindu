@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
 import com.google.android.gms.ads.AdRequest;
@@ -45,6 +46,7 @@ public class TopicActivity extends AppCompatActivity implements TopicsAdapter.it
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic);
+        EdgeToEdgeHelper.apply(this, findViewById(R.id.topic_root));
 
         getIntentData();
         init();

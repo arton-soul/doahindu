@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -42,6 +41,7 @@ import com.dearyoti.doahindu.fragment.PolicyFragment;
 import com.dearyoti.doahindu.fragment.RecentFragment;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
+import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
 import com.dearyoti.doahindu.utils.MySharedPref;
 import com.google.android.material.navigation.NavigationView;
 
@@ -83,16 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     };
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        Configuration configuration = new Configuration(newBase.getResources().getConfiguration());
-        configuration.fontScale = 1f;
-        super.attachBaseContext(newBase.createConfigurationContext(configuration));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EdgeToEdgeHelper.apply(this, findViewById(R.id.drawer));
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
 
         init();

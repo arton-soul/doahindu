@@ -7,16 +7,12 @@
     android:background="@color/background_color"
     tools:context=".fragment.PolicyFragment">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.cardview.widget.CardView
+    <androidx.cardview.widget.CardView
             android:id="@+id/card_img_topic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:background="@color/white"
+            android:background="@color/surface_color"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:divider="@android:color/transparent"
@@ -35,9 +31,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="10dp" />
             </RelativeLayout>
-        </androidx.cardview.widget.CardView>
-
-    </ScrollView>
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/progressBar"

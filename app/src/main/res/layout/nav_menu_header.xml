@@ -9,6 +9,7 @@
         android:id="@+id/menu_header_image"
         android:layout_width="@dimen/_75sdp"
         android:layout_height="@dimen/_75sdp"
+        android:contentDescription="@null"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_10sdp"
         android:padding="10dp"

@@ -96,23 +96,23 @@ Kriteria selesai:
 
 Tujuan: memastikan tampilan nyaman, adaptif, dan dapat diakses.
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 2.
-- [ ] Menerapkan edge-to-edge dan penanganan `WindowInsets`.
+- [x] Mendapatkan persetujuan untuk memulai Fase 2.
+- [x] Menerapkan edge-to-edge dan penanganan `WindowInsets`.
 - [ ] Menguji status bar, navigation bar, dan display cutout.
-- [ ] Menghapus pemaksaan `fontScale = 1`.
-- [ ] Menambahkan dukungan ukuran teks pengguna.
+- [x] Menghapus pemaksaan `fontScale = 1`.
+- [x] Menambahkan dukungan ukuran teks pengguna.
 - [ ] Menambahkan pengaturan ukuran teks khusus isi doa jika disetujui.
 - [ ] Memeriksa kontras warna untuk mode terang dan gelap.
-- [ ] Menambahkan `contentDescription` pada elemen interaktif yang memerlukannya.
-- [ ] Memastikan ukuran target sentuh memadai.
-- [ ] Membuat layout adaptif untuk ponsel, tablet, dan foldable.
-- [ ] Meninjau kembali penguncian orientasi portrait.
+- [x] Menambahkan `contentDescription` pada elemen interaktif yang memerlukannya.
+- [x] Memastikan ukuran target sentuh memadai.
+- [x] Membuat baseline layout adaptif untuk ponsel dan layar `sw600dp`; verifikasi tablet/foldable masih terbuka.
+- [x] Meninjau kembali dan menghapus penguncian orientasi portrait.
 - [ ] Memastikan teks tidak terpotong saat font diperbesar.
 - [ ] Menguji dengan TalkBack.
 
 Kriteria selesai:
 
-- [ ] Tampilan tidak tertutup system bar.
+- [x] Tampilan ponsel API 29 tidak tertutup system bar berdasarkan pemeriksaan visual.
 - [ ] Aplikasi dapat digunakan dengan ukuran font besar.
 - [ ] Alur utama dapat digunakan dengan TalkBack.
 - [ ] Layout utama berfungsi pada ponsel dan layar besar.
@@ -456,6 +456,28 @@ Catatan/risiko tersisa:
 - Hasil: seluruh fungsi yang diuji berjalan normal dan tidak ditemukan masalah
 - Status: verifikasi fungsional Fase 1 pada API 29 selesai
 - Catatan: system image/emulator API 36 belum tersedia di lingkungan lokal, sehingga item pengujian perilaku khusus Android 16 tetap terbuka dan tidak dicentang
+
+### Entri 7 — Implementasi Awal Fase 2
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: Fase 2 disetujui
+- Edge-to-edge: menambahkan penanganan system bar dan display cutout melalui `WindowInsets` pada Main, Splash, Topic, dan Stories
+- Orientasi: penguncian portrait dihapus dari empat activity utama
+- Ukuran teks: pemaksaan `fontScale = 1` dihapus agar aplikasi mengikuti pengaturan sistem
+- Aksesibilitas: menambahkan label aksesibilitas pada elemen interaktif/dekoratif yang relevan, label dinamis untuk favorit, dan target sentuh minimum 48dp
+- RTL dan resource: teks antarmuka dipindahkan ke string resource dan atribut kiri/kanan yang relevan diganti menjadi start/end
+- Layout adaptif: grid ponsel menggunakan 2 kolom, sedangkan resource `sw600dp` menggunakan 4 kolom dan ukuran banner khusus layar besar
+- Mode gelap: palette warna malam dasar ditambahkan; pemeriksaan kontras visual manual masih terbuka
+- Perbaikan layout: menghilangkan ScrollView berlapis pada halaman Tentang dan Kebijakan Privasi serta memperbaiki overlap header beranda
+- Build debug: berhasil
+- Unit test: 1 test lulus, tanpa failure/error
+- Lint: berhasil tanpa error; warning turun dari 116 menjadi 54
+- Sasaran lint yang kini nol: `ContentDescription`, `LockedOrientationActivity`, `DiscouragedApi`, `RtlHardcoded`, `HardcodedText`, `TouchTargetSize`, `RelativeOverlap`, `ObsoleteLayoutParam`, dan `ScrollViewSize`
+- Perangkat fisik: APK dipasang dan dibuka pada Redmi Note 8 Pro/Android 10 API 29 dengan skala font sistem 1,17; tidak ditemukan crash/ANR aplikasi
+- Pemeriksaan visual: toolbar, header, tombol, grid dua kolom, status bar, dan navigation bar tampil baik pada perangkat fisik
+- Screenshot lokal: `.backups/phase2-physical-final.png`
+- Pengujian tersisa: rotasi, ukuran font besar, mode gelap, TalkBack, display cutout, multi-window, serta tablet/foldable
+- Status: implementasi awal selesai; Fase 2 belum ditutup sampai pengujian manual tersisa dilakukan
 
 ## Catatan Rilis
 

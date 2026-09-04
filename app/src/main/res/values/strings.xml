@@ -4,6 +4,17 @@
     <string name="menu_favorite">Favorit</string>
     <string name="menu_about_us">Tentang Saya</string>
     <string name="menu_privacy">Privacy Policy</string>
+    <string name="menu_home">Beranda</string>
+    <string name="menu_rate">Beri Rating</string>
+    <string name="menu_share_app">Bagikan Aplikasi</string>
+    <string name="menu_search">Cari</string>
+    <string name="more">Selengkapnya</string>
+
+    <string name="action_share">Bagikan doa</string>
+    <string name="action_add_favorite">Tambahkan ke favorit</string>
+    <string name="action_remove_favorite">Hapus dari favorit</string>
+    <string name="category_image">Gambar kategori</string>
+    <string name="topic_image">Gambar doa</string>
 
     <string name="category_text">Kategori</string>
     <string name="recent_text">Dilihat Sebelumnya</string>
@@ -22,6 +33,7 @@
     <string name="title_activity_scrolling">Stories</string>
 
     <string name="title_activity_topic">Sub Bab</string>
+    <string name="story_placeholder">Isi doa</string>
 
     <string name="admob_app_id">ca-app-pub-4098008677804088~1181209455</string>
     <string name="banner_ids">ca-app-pub-4098008677804088/2657942651</string>

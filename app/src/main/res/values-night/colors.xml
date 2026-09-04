@@ -1,0 +1,9 @@
+<resources>
+    <color name="surface_color">#1E1E1E</color>
+    <color name="text_color">#F5F5F5</color>
+    <color name="light_text_color">#D5D5D5</color>
+    <color name="line_color">#454545</color>
+    <color name="background_color">#121212</color>
+    <color name="navigation_item_bg_checked">#493126</color>
+    <color name="navigation_item_bg_default">#1E1E1E</color>
+</resources>

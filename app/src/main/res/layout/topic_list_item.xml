@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:background="@color/white"
+    android:background="@color/surface_color"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:divider="@android:color/transparent"
@@ -31,6 +31,7 @@
                 android:id="@+id/img_topic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/topic_image"
                 android:src="@mipmap/ic_launcher" />
 
         </androidx.cardview.widget.CardView>
@@ -39,17 +40,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/card_img_topic">
+            android:layout_toEndOf="@+id/card_img_topic">
 
             <TextView
                 android:id="@+id/txt_topic_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/img_item_arrow"
-                android:text="Moral"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/img_item_arrow"
+                android:text="@string/title_activity_topic"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/item_semi_medium_text" />
 
@@ -58,9 +59,12 @@
                 android:id="@+id/img_item_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/action_add_favorite"
                 android:src="@drawable/favorite_select"
                 cardView:tint="@color/colorPrimary" />
 
@@ -68,9 +72,12 @@
                 android:id="@+id/img_item_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_arrow"
                 android:tint="@color/colorPrimary"
                 android:visibility="invisible"

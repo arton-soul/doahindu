@@ -45,25 +45,29 @@
             <RelativeLayout
                 android:id="@+id/layout_category"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_below="@+id/relative_banner"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp">
+                android:layout_marginEnd="10dp">
 
                 <View
                     android:layout_width="@dimen/_2sdp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentLeft="true"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
                     android:background="@color/colorPrimaryDark" />
 
                 <TextView
+                    android:id="@+id/txt_category_section"
                     style="@style/StyleBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_toStartOf="@id/btn_more_category"
+                    android:gravity="center_vertical|start"
                     android:text="@string/category_text"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/item_medium_text" />
@@ -73,17 +77,17 @@
                     android:id="@+id/btn_more_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="3dp"
                     android:background="@drawable/more_bg"
                     android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingLeft="5dp"
+                    android:minHeight="48dp"
+                    android:paddingStart="5dp"
                     android:paddingTop="3dp"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="3dp"
-                    android:text="Selengkapnya"
+                    android:text="@string/more"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/item_medium_text" />
@@ -95,32 +99,36 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_category"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp" />
+                android:layout_marginEnd="5dp" />
 
             <RelativeLayout
                 android:id="@+id/layout_recent"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_below="@+id/category_recycler"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_marginEnd="10dp">
 
                 <View
                     android:layout_width="@dimen/_2sdp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentLeft="true"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
                     android:background="@color/colorPrimaryDark" />
 
                 <TextView
+                    android:id="@+id/txt_recent_section"
                     style="@style/StyleBold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_toStartOf="@id/btn_more_recent"
+                    android:gravity="center_vertical|start"
                     android:text="@string/recent_text"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/item_medium_text" />
@@ -130,17 +138,17 @@
                     android:id="@+id/btn_more_recent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="3dp"
                     android:background="@drawable/more_bg"
                     android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingLeft="5dp"
+                    android:minHeight="48dp"
+                    android:paddingStart="5dp"
                     android:paddingTop="3dp"
-                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="3dp"
-                    android:text="Selengkapnya"
+                    android:text="@string/more"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/item_medium_text" />
@@ -153,9 +161,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_recent"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp" />
+                android:layout_marginEnd="5dp" />
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 

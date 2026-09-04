@@ -110,8 +110,12 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     private void isFavorite(ViewHolder holder) {
         if (db.isFavorite(selectedTopicId)) {
             holder.imgTopicBookmark.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.favorite_select));
+            holder.imgTopicBookmark.setContentDescription(
+                    context.getString(R.string.action_remove_favorite));
         } else {
             holder.imgTopicBookmark.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.favorite_unselect));
+            holder.imgTopicBookmark.setContentDescription(
+                    context.getString(R.string.action_add_favorite));
         }
     }
 
