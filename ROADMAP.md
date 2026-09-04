@@ -59,7 +59,7 @@ Tujuan: menyediakan kondisi awal yang dapat dibandingkan sebelum perubahan dilak
 - [x] Membuat build debug dari kondisi awal.
 - [ ] Menjalankan aplikasi pada emulator/perangkat API minimum yang dipilih.
 - [ ] Menjalankan aplikasi pada Android versi terbaru.
-- [ ] Mencatat screenshot dan alur utama sebagai baseline.
+- [x] Mencatat screenshot beranda dan alur utama sebagai baseline awal.
 - [ ] Menguji kategori, pencarian, baca doa, favorit, riwayat, berbagi, notifikasi, dan iklan.
 - [x] Mencatat temuan baseline yang dapat diperiksa dari build dan lint.
 
@@ -394,6 +394,22 @@ Catatan/risiko tersisa:
 - Screenshot baseline: screenshot diagnostik tersimpan lokal di `.backups/doahindu-baseline-home.png`, tetapi belum menjadi baseline UI final karena masih menampilkan dialog permission
 - Hasil: baseline build dapat dikompilasi; pekerjaan Fase 0 yang memerlukan perangkat masih terbuka
 - Risiko tersisa: test otomatis belum mencakup logika aplikasi dan 127 warning lint belum ditangani
+
+### Entri 3 — Commit Baseline dan Smoke Test Perangkat Fisik
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: identitas Git diberikan dan penggunaan perangkat fisik diizinkan
+- Git lokal: `user.name=arton-soul`, `user.email=arton.79@gmail.com`
+- Commit baseline: `c8bdf149ef7ab6f6dcdd9bd61cda1b13c0653524` (`chore: establish Doa Hindu baseline`)
+- Perangkat: Xiaomi Redmi Note 8 Pro, Android 10/API 29
+- Kondisi awal perangkat: paket `com.dearyoti.doahindu` belum terpasang sehingga tidak ada data aplikasi lama yang ditimpa
+- Instalasi: APK debug berhasil dipasang
+- Peluncuran: cold start berhasil dan proses aplikasi tetap berjalan tanpa crash fatal
+- Tampilan: beranda berhasil tampil dengan banner, kategori, toolbar, dan navigasi bawah sistem
+- Screenshot baseline valid: `.backups/doahindu-physical-home.png`
+- UI hierarchy baseline: `.backups/doahindu-physical-home.xml`
+- Kendala pengujian: MIUI menolak injeksi tap ADB karena izin `INJECT_EVENTS`; pengaturan keamanan perangkat tidak diubah
+- Status: smoke test peluncuran dan beranda lulus; pengujian interaksi kategori, pencarian, detail doa, favorit, riwayat, dan berbagi masih terbuka
 
 ## Catatan Rilis
 
