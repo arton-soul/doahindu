@@ -714,13 +714,14 @@ Catatan/risiko tersisa:
 - Keamanan: `MainActivity` tidak lagi exported; URL Play Store menggunakan HTTPS; WebView tetap tanpa JavaScript dan hanya membuka host HTTPS yang diizinkan
 - Secret: tidak ditemukan private/signing key yang terlacak; Firebase config dan signing credential tetap dikecualikan oleh `.gitignore`
 - Kebijakan privasi: ditulis ulang dalam Bahasa Indonesia agar menjelaskan data lokal, GitHub Pages, Ads/UMP, Firebase Analytics, FCM, notifikasi, backup, dan kontak pengembang
-- Tindakan eksternal tersisa: membuat/mengaktifkan pesan consent di AdMob Privacy & messaging, menerbitkan kebijakan privasi pada URL publik, dan memperbarui Data Safety di Play Console
+- Kebijakan privasi publik: `https://dearyoti.blogspot.com/p/kebijakan-privasi-doa-hindu-terakhir.html`; terverifikasi HTTPS, status 200, dapat diakses tanpa login, serta memuat identitas dan isi kebijakan yang disetujui
+- Tindakan eksternal tersisa: membuat/mengaktifkan pesan consent di AdMob Privacy & messaging dan memperbarui Data Safety di Play Console
 - Verifikasi otomatis: debug/unit test berhasil; lint 0 error dan 59 warning; build release dengan R8 berhasil; 8 instrumented test lulus pada Redmi Note 8 Pro/API 29 dan emulator/API 35
 - Perangkat fisik: APK debug dengan unit iklan demo berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro; aplikasi mencapai `MainActivity`, proses aktif, dan tidak ditemukan crash, `SecurityException`, atau ANR
 - Uji deep link: intent notifikasi simulasi dengan `topic_id=5` melewati `SplashActivity` dan berhasil membuka `StoriesActivity` pada perangkat fisik
 - Verifikasi manual: pemilik menguji consent/privasi iklan, opt-in notifikasi, kebijakan privasi, frekuensi interstitial, dan alur membaca pada perangkat; hasil dinyatakan baik
 - Status Fase 8A: implementasi teknis dan verifikasi perangkat selesai
-- Pekerjaan eksternal tersisa: mengaktifkan pesan consent di AdMob Privacy & messaging, menerbitkan kebijakan privasi pada URL publik, dan memperbarui Data Safety di Play Console
+- Pekerjaan eksternal tersisa: mengaktifkan pesan consent di AdMob Privacy & messaging dan memperbarui Data Safety di Play Console
 
 ## Catatan Rilis
 
