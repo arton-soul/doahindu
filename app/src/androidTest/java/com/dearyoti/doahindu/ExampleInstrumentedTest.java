@@ -12,6 +12,8 @@ import com.dearyoti.doahindu.database.DatabaseHelper;
 import com.dearyoti.doahindu.model.CategoryModel;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
+import com.dearyoti.doahindu.utils.ReadingPreferences;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +31,29 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    @Test
+    public void storesReadingPreferencesAndIndependentScrollPositions() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.getSharedPreferences("READING_PREFERENCES", Context.MODE_PRIVATE)
+                .edit().clear().commit();
+        ReadingPreferences preferences = new ReadingPreferences(context);
+        assertEquals(16, preferences.getTextSizeSp());
+        assertEquals(1.0f, preferences.getLineSpacing(), 0.001f);
+        assertFalse(preferences.keepScreenOn());
+        assertEquals(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, preferences.getThemeMode());
+        preferences.save(22, 1.5f, AppCompatDelegate.MODE_NIGHT_YES, true);
+        preferences.saveScrollPosition("topic_5", 640);
+        preferences.saveScrollPosition("latest_5", 320);
+        ReadingPreferences restored = new ReadingPreferences(context);
+        assertEquals(22, restored.getTextSizeSp());
+        assertEquals(1.5f, restored.getLineSpacing(), 0.001f);
+        assertTrue(restored.keepScreenOn());
+        assertEquals(AppCompatDelegate.MODE_NIGHT_YES, restored.getThemeMode());
+        assertEquals(640, restored.getScrollPosition("topic_5"));
+        assertEquals(320, restored.getScrollPosition("latest_5"));
+        assertEquals(0, restored.getScrollPosition("topic_6"));
+    }
+
     @Test
     public void hidesPlaceholdersAndKeepsTheirStableIds() throws Exception {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

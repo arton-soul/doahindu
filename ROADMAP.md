@@ -229,12 +229,13 @@ Keputusan editorial sementara:
 
 Tujuan: meningkatkan manfaat utama aplikasi bagi pembaca.
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 6.
-- [ ] Menambahkan pilihan ukuran huruf isi doa.
-- [ ] Menambahkan pilihan jarak baris.
-- [ ] Menambahkan tema terang, gelap, dan mengikuti sistem.
-- [ ] Menambahkan opsi menjaga layar tetap menyala saat membaca.
-- [ ] Menyimpan posisi baca terakhir.
+- [x] Mendapatkan persetujuan untuk memulai Fase 6A.
+- [x] Menambahkan pilihan ukuran huruf isi doa.
+- [x] Menambahkan pilihan jarak baris.
+- [x] Menambahkan tema terang, gelap, dan mengikuti sistem.
+- [x] Menambahkan opsi menjaga layar tetap menyala saat membaca.
+- [x] Menyimpan posisi baca terakhir per doa/cerita.
+- [ ] Memverifikasi seluruh opsi Fase 6A secara manual pada perangkat.
 - [ ] Menambahkan pencarian judul dan isi doa.
 - [ ] Menyorot kata yang ditemukan.
 - [ ] Menambahkan filter kategori.
@@ -244,9 +245,9 @@ Tujuan: meningkatkan manfaat utama aplikasi bagi pembaca.
 
 Kriteria selesai:
 
-- [ ] Pengaturan baca tersimpan dan dipulihkan dengan benar.
+- [x] Pengaturan baca tersimpan dan dipulihkan dengan benar berdasarkan instrumented test.
 - [ ] Pencarian judul dan isi memberikan hasil yang relevan.
-- [ ] Fitur baca tetap berfungsi secara offline.
+- [x] Fitur baca dan pengaturannya tetap berfungsi secara offline.
 
 ## Fase 7 — Fitur Tambahan Opsional
 
@@ -679,6 +680,23 @@ Catatan/risiko tersisa:
 - Perangkat fisik: APK terbaru berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
 - Verifikasi perangkat: pemilik menjalankan menu `Perbarui Konten`; preferensi Redmi terkonfirmasi `content_version=3`, proses aplikasi aktif, dan tidak ditemukan crash, `SQLiteException`, atau warning penggantian file
 - Status publikasi awal Fase 5: pembaruan database melalui GitHub Pages berhasil diterima perangkat fisik tanpa update APK
+
+### Entri 20 — Fase 6A: Kenyamanan Membaca
+
+- Tanggal: 5 September 2026
+- Persetujuan pemilik: Fase 6A disetujui
+- Pengaturan: menambahkan dialog `Pengaturan membaca` pada halaman doa/cerita
+- Ukuran teks: pilihan 14, 16, 18, 20, 22, dan 24 sp; default tetap 16 sp
+- Jarak baris: pilihan 1,0×, 1,25×, 1,5×, dan 1,75×; default tetap 1,0×
+- Tema: pilihan mengikuti sistem, terang, dan gelap; tema diterapkan secara global sejak `MyApplication`
+- Layar: opsi menjaga layar tetap menyala hanya saat halaman pembaca aktif
+- Posisi baca: scroll disimpan per `topic_id`, dengan namespace terpisah untuk topik dan cerita terbaru
+- Penyimpanan: seluruh preferensi berada di SharedPreferences lokal `READING_PREFERENCES` dan bekerja offline
+- Build debug dan unit test: berhasil
+- Lint: berhasil dengan 0 error dan 55 warning
+- Instrumented test: 6 test lulus pada emulator Android 15/API 35, termasuk default/persistensi preferensi dan isolasi posisi baca
+- Perangkat fisik: APK berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro/Android 10 tanpa menghapus data; aplikasi aktif tanpa crash, ANR, atau `SQLiteException`
+- Pengujian tersisa: pemilik memverifikasi perubahan ukuran teks, jarak baris, tiga mode tema, keep-screen-on, dan pemulihan posisi baca secara manual
 
 ## Catatan Rilis
 

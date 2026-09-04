@@ -9,16 +9,23 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.util.TypedValue;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.R;
@@ -28,6 +35,7 @@ import com.dearyoti.doahindu.model.LatestStoryModel;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
 import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
+import com.dearyoti.doahindu.utils.ReadingPreferences;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -50,6 +58,8 @@ public class StoriesActivity extends AppCompatActivity {
     private FloatingActionButton fabShare;
     ImageView imgTopic;
     byte[] imageBytes;
+    private NestedScrollView readingScroll;
+    private ReadingPreferences readingPreferences;
 
     private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -83,6 +93,7 @@ public class StoriesActivity extends AppCompatActivity {
 
     private void init() {
         db = new DatabaseHelper(StoriesActivity.this);
+        readingPreferences = new ReadingPreferences(this);
         Toolbar toolbar = findViewById(R.id.toolbar_stories);
         setSupportActionBar(toolbar);
 
@@ -94,6 +105,8 @@ public class StoriesActivity extends AppCompatActivity {
         txtStory = findViewById(R.id.txt_story);
         fabShare = findViewById(R.id.fab_share);
         imgTopic = findViewById(R.id.img_topic);
+        readingScroll = findViewById(R.id.reading_scroll);
+        applyReadingPreferences();
 
         Typeface font_bold = Typeface.createFromAsset(getAssets(), Constant.FONT_PATH_SEMIBOLD);
         toolbarStoriesTitle.setTypeface(font_bold);
@@ -156,7 +169,78 @@ public class StoriesActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
                 imgTopic.setImageBitmap(bitmap);
             }
+            readingScroll.post(() -> readingScroll.scrollTo(0,
+                    readingPreferences.getScrollPosition(getContentKey())));
         }, error -> finish());
+    }
+
+    private String getContentKey() {
+        return ("from_latest".equals(flag) ? "latest_" : "topic_") + selectedTopicId;
+    }
+
+    private void applyReadingPreferences() {
+        txtStory.setTextSize(TypedValue.COMPLEX_UNIT_SP, readingPreferences.getTextSizeSp());
+        txtStory.setLineSpacing(0f, readingPreferences.getLineSpacing());
+        if (readingPreferences.keepScreenOn()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+    }
+
+    private void showReadingSettings() {
+        int[] textSizes = {14, 16, 18, 20, 22, 24};
+        float[] lineSpacings = {1.0f, 1.25f, 1.5f, 1.75f};
+        int[] themeModes = {AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+                AppCompatDelegate.MODE_NIGHT_NO, AppCompatDelegate.MODE_NIGHT_YES};
+        LinearLayout form = new LinearLayout(this);
+        form.setOrientation(LinearLayout.VERTICAL);
+        int padding = (int) (20 * getResources().getDisplayMetrics().density);
+        form.setPadding(padding, padding / 2, padding, 0);
+        TextView sizeLabel = new TextView(this); sizeLabel.setText(R.string.text_size);
+        Spinner sizeSpinner = new Spinner(this);
+        String[] sizeNames = new String[textSizes.length];
+        int selectedSize = 1;
+        for (int i = 0; i < textSizes.length; i++) {
+            sizeNames[i] = textSizes[i] + " sp";
+            if (textSizes[i] == readingPreferences.getTextSizeSp()) selectedSize = i;
+        }
+        sizeSpinner.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, sizeNames));
+        sizeSpinner.setSelection(selectedSize);
+        TextView spacingLabel = new TextView(this); spacingLabel.setText(R.string.line_spacing);
+        Spinner spacingSpinner = new Spinner(this);
+        String[] spacingNames = {"1,0×", "1,25×", "1,5×", "1,75×"};
+        spacingSpinner.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, spacingNames));
+        int selectedSpacing = Math.max(0, Math.round((readingPreferences.getLineSpacing() - 1f) * 4));
+        spacingSpinner.setSelection(Math.min(selectedSpacing, lineSpacings.length - 1));
+        TextView themeLabel = new TextView(this); themeLabel.setText(R.string.app_theme);
+        Spinner themeSpinner = new Spinner(this);
+        themeSpinner.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,
+                new String[]{getString(R.string.theme_system), getString(R.string.theme_light),
+                        getString(R.string.theme_dark)}));
+        int currentTheme = readingPreferences.getThemeMode();
+        themeSpinner.setSelection(currentTheme == themeModes[1] ? 1 : currentTheme == themeModes[2] ? 2 : 0);
+        CheckBox keepScreen = new CheckBox(this);
+        keepScreen.setText(R.string.keep_screen_on);
+        keepScreen.setChecked(readingPreferences.keepScreenOn());
+        form.addView(sizeLabel); form.addView(sizeSpinner); form.addView(spacingLabel);
+        form.addView(spacingSpinner); form.addView(themeLabel); form.addView(themeSpinner);
+        form.addView(keepScreen);
+        new AlertDialog.Builder(this).setTitle(R.string.reading_settings).setView(form)
+                .setPositiveButton(R.string.save, (dialog, which) -> {
+                    int oldTheme = readingPreferences.getThemeMode();
+                    int newTheme = themeModes[themeSpinner.getSelectedItemPosition()];
+                    readingPreferences.save(textSizes[sizeSpinner.getSelectedItemPosition()],
+                            lineSpacings[spacingSpinner.getSelectedItemPosition()], newTheme,
+                            keepScreen.isChecked());
+                    applyReadingPreferences();
+                    if (oldTheme != newTheme) AppCompatDelegate.setDefaultNightMode(newTheme);
+                    Snackbar.make(txtStory, R.string.reading_settings_saved,
+                            Snackbar.LENGTH_SHORT).show();
+                }).setNegativeButton(R.string.cancel, null).show();
     }
 
     private void showFavorite(boolean favorite) {
@@ -262,6 +346,10 @@ public class StoriesActivity extends AppCompatActivity {
             showNoteDialog();
             return true;
         }
+        if (id == R.id.nav_reading_settings) {
+            showReadingSettings();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -281,6 +369,9 @@ public class StoriesActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        if (readingScroll != null && readingPreferences != null && selectedTopicId != null) {
+            readingPreferences.saveScrollPosition(getContentKey(), readingScroll.getScrollY());
+        }
         if (adView != null) {
             adView.pause();
         }

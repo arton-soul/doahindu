@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/nav_reading_settings"
+        android:title="@string/reading_settings"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/nav_stories_note"
         android:title="@string/personal_note"
         app:showAsAction="never" />

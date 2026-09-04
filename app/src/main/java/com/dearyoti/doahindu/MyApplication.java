@@ -3,6 +3,7 @@ package com.dearyoti.doahindu;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import com.dearyoti.doahindu.utils.ReadingPreferences;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -20,6 +21,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ReadingPreferences.applyTheme(this);
         MobileAds.initialize(this, initializationStatus -> { });
         loadInterstiallAds();
     }
