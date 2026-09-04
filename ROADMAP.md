@@ -73,24 +73,24 @@ Kriteria selesai:
 
 Tujuan: membuat aplikasi kompatibel dengan SDK/API terbaru dan persyaratan Google Play.
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 1.
-- [ ] Memastikan versi API terbaru dan tenggat Google Play saat implementasi dimulai.
-- [ ] Memperbarui `compileSdk` ke API yang disepakati (rencana awal: API 36).
-- [ ] Memperbarui `targetSdk` ke API yang disepakati (rencana awal: API 36).
-- [ ] Meninjau apakah `minSdk 23` tetap dipertahankan.
-- [ ] Memastikan kompatibilitas Android Gradle Plugin, Gradle, dan JDK.
-- [ ] Memperbarui dependency AndroidX, Material, Firebase, Google Mobile Ads, dan test.
+- [x] Mendapatkan persetujuan untuk memulai Fase 1.
+- [x] Memastikan versi API terbaru dan tenggat Google Play saat implementasi dimulai.
+- [x] Memperbarui `compileSdk` ke API yang disepakati (API 36).
+- [x] Memperbarui `targetSdk` ke API yang disepakati (API 36).
+- [x] Meninjau dan mempertahankan `minSdk 23`.
+- [x] Memastikan kompatibilitas Android Gradle Plugin, Gradle, dan JDK.
+- [x] Memperbarui dependency AndroidX, Material, Firebase, Google Mobile Ads, dan test.
 - [ ] Menghapus atau mengganti dependency lama yang sudah tidak diperlukan.
-- [ ] Menguji build debug dan release dengan R8/minification.
+- [x] Menguji build debug dan release dengan R8/minification.
 - [ ] Menangani warning dan error yang relevan dari lint/build.
 - [ ] Menguji perubahan perilaku Android 16.
 
 Kriteria selesai:
 
-- [ ] Debug dan release build berhasil.
+- [x] Debug dan release build berhasil.
 - [ ] Aplikasi berjalan pada versi Android minimum dan terbaru yang disepakati.
 - [ ] Tidak ada crash pada alur utama.
-- [ ] Target API memenuhi persyaratan Google Play saat rilis.
+- [x] Target API memenuhi persyaratan Google Play yang berlaku saat pemeriksaan Fase 1.
 
 ## Fase 2 — UI, Edge-to-Edge, dan Aksesibilitas
 
@@ -333,7 +333,7 @@ Kriteria selesai:
 
 ## Keputusan yang Perlu Persetujuan Pemilik
 
-- [ ] Target SDK/API final.
+- [x] Target SDK/API final untuk pembaruan ini: API 36.
 - [ ] Tetap menggunakan Java/XML atau migrasi bertahap ke Kotlin/Compose.
 - [ ] Room atau SQLite dengan repository khusus.
 - [ ] Format source konten: JSON, Markdown, atau SQLite.
@@ -420,6 +420,31 @@ Catatan/risiko tersisa:
 - Hasil: seluruh fungsi yang diuji berjalan normal dan tidak ditemukan masalah
 - Status Fase 0: selesai untuk baseline yang disepakati
 - Catatan: pengujian khusus pada API minimum 23 dan Android/API terbaru tetap dapat ditambahkan pada matriks pengujian rilis di Fase 9
+
+### Entri 5 — Fase 1: SDK/API 36 dan Dependency
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: Fase 1 disetujui
+- SDK: `compileSdk` dan `targetSdk` diperbarui dari 35 ke 36; `minSdk 23` dipertahankan
+- Toolchain: Java source/target diperbarui dari 8 ke 17; AGP 8.13.2 dan Gradle 8.13 dipertahankan karena kompatibel dengan API 36
+- Google Services plugin: 4.4.2 ke 4.5.0
+- Firebase: dipindahkan ke Firebase BoM 34.18.0 agar Analytics dan Messaging menggunakan versi yang konsisten
+- AndroidX/Material: AppCompat 1.8.0, Material 1.14.0, ConstraintLayout 2.2.2, dan RecyclerView 1.4.0
+- Library lain: Gson 2.14.0; Google Mobile Ads tetap 25.4.0 karena sudah versi stabil terbaru saat pemeriksaan
+- Test: AndroidX Test JUnit 1.3.0 dan Espresso 3.7.0
+- Release optimization: default ProGuard diperbarui ke `proguard-android-optimize.txt`
+- BuildConfig: konfigurasi deprecated dipindahkan dari `gradle.properties` ke module DSL
+- Build debug: berhasil
+- Unit test: 1 test lulus, tanpa failure/error
+- Lint: berhasil tanpa error; warning turun dari 127 menjadi 116
+- Build release R8/minification: berhasil; menghasilkan APK unsigned dan mapping R8
+- SHA-256 APK debug: `E0988AFBA1F51B9A63654FB8809532E4F0A79A9316CE630DD1C14300575441E9`
+- SHA-256 APK release unsigned: `A30E6C22972B9075ECFA69484DBFF00095D762E24E920FA94D8AFE8D36226CB9`
+- Verifikasi manifest APK: `minSdk 23`, `targetSdk 36`, `compileSdk 36`
+- Perangkat fisik: APK API 36 berhasil dipasang pada Redmi Note 8 Pro/Android 10 API 29; cold start berhasil tanpa crash atau ANR
+- Peringatan tersisa: command-line tools Android lebih lama daripada format metadata SDK, beberapa API Java lama/deprecated masih digunakan, dan Gradle masih melaporkan fitur deprecated
+- Pengujian tersisa: alur utama setelah pembaruan perlu diverifikasi manual; perubahan perilaku khusus Android 16 perlu diuji pada emulator/perangkat API 36
+- Referensi: Android 16 SDK `https://developer.android.com/about/versions/16/setup-sdk`, persyaratan target API `https://developer.android.com/google/play/requirements/target-sdk`, Firebase release notes `https://firebase.google.com/support/release-notes/android`, dan Mobile Ads release notes `https://developers.google.com/admob/android/rel-notes`
 
 ## Catatan Rilis
 
