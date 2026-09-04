@@ -3,12 +3,14 @@
 
     <string name="menu_favorite">Favorit</string>
     <string name="menu_about_us">Tentang Saya</string>
-    <string name="menu_privacy">Privacy Policy</string>
+    <string name="menu_privacy">Kebijakan Privasi</string>
     <string name="menu_home">Beranda</string>
     <string name="menu_rate">Beri Rating</string>
     <string name="menu_share_app">Bagikan Aplikasi</string>
     <string name="menu_search">Cari</string>
     <string name="menu_content_update">Perbarui Konten</string>
+    <string name="menu_notifications">Aktifkan Notifikasi</string>
+    <string name="menu_ad_privacy">Privasi Iklan</string>
     <string name="more">Selengkapnya</string>
 
     <string name="action_share">Bagikan doa</string>
@@ -65,6 +67,12 @@
     <string name="update_app_required">Versi aplikasi yang lebih baru diperlukan untuk konten ini.</string>
     <string name="update_invalid">Paket pembaruan tidak valid. Database lama tetap digunakan.</string>
     <string name="update_network_error">Pembaruan belum dapat diunduh. Periksa koneksi internet.</string>
+    <string name="notification_permission_title">Aktifkan notifikasi?</string>
+    <string name="notification_permission_message">Notifikasi digunakan untuk menyampaikan informasi penting dan konten baru. Doa tetap dapat digunakan sepenuhnya jika Anda tidak mengaktifkannya.</string>
+    <string name="notification_permission_granted">Notifikasi sudah aktif.</string>
+    <string name="notification_permission_permission_unavailable">Notifikasi dinonaktifkan. Anda dapat mengaktifkannya melalui pengaturan aplikasi.</string>
+    <string name="continue_text">Lanjutkan</string>
+    <string name="ad_privacy_unavailable">Pilihan privasi iklan tidak diperlukan untuk perangkat atau wilayah ini.</string>
 
     <string name="admob_app_id">ca-app-pub-4098008677804088~1181209455</string>
     <string name="banner_ids">ca-app-pub-4098008677804088/2657942651</string>
@@ -72,5 +80,5 @@
 
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
     <string name="default_notification_channel_id">777</string>
-    <string name="default_notification_channel_name" translatable="true">offlinedoa</string>
+    <string name="default_notification_channel_name" translatable="true">Informasi Doa Hindu</string>
 </resources>

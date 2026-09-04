@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.model.CategoryModel;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
@@ -32,6 +33,19 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    @Test
+    public void limitsInterstitialToEveryFifthReadingExit() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.getSharedPreferences("AD_PREFERENCES", Context.MODE_PRIVATE)
+                .edit().clear().commit();
+        assertFalse(MyApplication.shouldShowInterstitial(context));
+        assertFalse(MyApplication.shouldShowInterstitial(context));
+        assertFalse(MyApplication.shouldShowInterstitial(context));
+        assertFalse(MyApplication.shouldShowInterstitial(context));
+        assertTrue(MyApplication.shouldShowInterstitial(context));
+        assertFalse(MyApplication.shouldShowInterstitial(context));
+    }
+
     @Test
     public void usesOneCategoryImageForEveryTopicThumbnail() throws Exception {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

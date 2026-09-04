@@ -64,7 +64,8 @@ public class StoriesActivity extends AppCompatActivity {
     private final OnBackPressedCallback backPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            if (MyApplication.interstitialAd != null) {
+            if (MyApplication.interstitialAd != null
+                    && MyApplication.shouldShowInterstitial(StoriesActivity.this)) {
                 MyApplication.interstitialAd.show(StoriesActivity.this);
             }
             finish();
@@ -356,6 +357,7 @@ public class StoriesActivity extends AppCompatActivity {
 
 
     public void bannerLoad() {
+        if (!MyApplication.areAdsInitialized()) return;
         adView = new AdView(this);
         adView.setAdUnitId(getResources().getString(R.string.banner_ids));
         int adWidth = Math.round(getResources().getDisplayMetrics().widthPixels

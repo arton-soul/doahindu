@@ -35,32 +35,45 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            showNotification(remoteMessage.getNotification());
+        if (remoteMessage.getNotification() != null || !remoteMessage.getData().isEmpty()) {
+            showNotification(remoteMessage);
         }
     }
 
-    private void showNotification(RemoteMessage.Notification notification) {
+    private void showNotification(RemoteMessage message) {
 
         Bitmap bitmap = null;
-        String title = notification.getTitle() != null ? notification.getTitle() : "";
-        String body = notification.getBody() != null ? notification.getBody() : "";
-        Uri image = notification.getImageUrl();
+        RemoteMessage.Notification notification = message.getNotification();
+        String dataTitle = message.getData().get("title");
+        String dataBody = message.getData().get("body");
+        String title = notification != null && notification.getTitle() != null
+                ? notification.getTitle() : dataTitle == null ? "Doa Hindu" : dataTitle;
+        String body = notification != null && notification.getBody() != null
+                ? notification.getBody() : dataBody == null ? "" : dataBody;
+        Uri image = notification == null ? null : notification.getImageUrl();
 
         // Pass the intent to switch to the MainActivity
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("notificationTitle", "" + title);
         intent.putExtra("notificationBody", "" + body);
+        String topicId = message.getData().get("topic_id");
+        if (topicId != null) {
+            try {
+                intent.putExtra("notification_topic_id", Integer.parseInt(topicId));
+            } catch (NumberFormatException ignored) {
+            }
+        }
         if (image != null) {
             intent.putExtra("notificationImage", image);
-            bitmap = getBitmapfromUrl(notification.getImageUrl().toString());
+            bitmap = getBitmapfromUrl(image.toString());
         }
 
         String channel_id = getResources().getString(R.string.default_notification_channel_id);
         String channel_name = getResources().getString(R.string.default_notification_channel_name);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+        int notificationId = message.getMessageId() == null
+                ? (int) System.currentTimeMillis() : message.getMessageId().hashCode();
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder;
@@ -96,7 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(notificationId, builder.build());
     }
 
     public Bitmap getBitmapfromUrl(String imageUrl) {

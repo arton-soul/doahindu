@@ -95,7 +95,7 @@ public class AboutUsFragment extends Fragment {
             if (((MainActivity) getActivity()).searchView != null) {
                 ((MainActivity) getActivity()).searchView.setVisibility(View.GONE);
             }
-            ((MainActivity) requireActivity()).highLightNavigation(7, "Tentang Saya");
+            ((MainActivity) requireActivity()).highLightNavigation(10, "Tentang Saya");
         }
     }
 }

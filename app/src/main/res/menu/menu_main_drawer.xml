@@ -45,6 +45,19 @@
             android:title="@string/menu_content_update"
             app:showAsAction="always" />
         <item
+            android:id="@+id/nav_item_notifications"
+            android:checked="false"
+            android:icon="@drawable/ic_recent"
+            android:title="@string/menu_notifications"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_ad_privacy"
+            android:checked="false"
+            android:icon="@drawable/ic_privacy_policy"
+            android:title="@string/menu_ad_privacy"
+            android:visible="false"
+            app:showAsAction="always" />
+        <item
             android:id="@+id/nav_item_privacy"
             android:checked="false"
             android:icon="@drawable/ic_privacy_policy"

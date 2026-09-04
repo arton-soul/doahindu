@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.dearyoti.doahindu.R;
+import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.activity.MainActivity;
 import com.dearyoti.doahindu.adapter.HomeCategoryAdapter;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
@@ -259,6 +260,7 @@ public class HomeFragment extends
     }
 
     public void bannerLoad() {
+        if (!MyApplication.areAdsInitialized()) return;
         adView = new AdView(getActivity());
         adView.setAdUnitId(getResources().getString(R.string.banner_ids));
         int adWidth = Math.round(getResources().getDisplayMetrics().widthPixels

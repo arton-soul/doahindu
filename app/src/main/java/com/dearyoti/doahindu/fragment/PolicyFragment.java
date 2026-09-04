@@ -80,8 +80,10 @@ public class PolicyFragment extends Fragment {
         }
 
         String host = uri.getHost();
-        if ("https".equals(uri.getScheme()) && ("www.google.com".equals(host)
-                || "support.google.com".equals(host) || "firebase.google.com".equals(host))) {
+        boolean allowedHttps = "https".equals(uri.getScheme()) && ("www.google.com".equals(host)
+                || "policies.google.com".equals(host) || "support.google.com".equals(host)
+                || "firebase.google.com".equals(host));
+        if (allowedHttps || "mailto".equals(uri.getScheme())) {
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
             } catch (ActivityNotFoundException ignored) {
@@ -95,9 +97,10 @@ public class PolicyFragment extends Fragment {
         super.onResume();
         if (getActivity() != null) {
             ((MainActivity) getActivity()).setToolbarTitle(
-                    ("Privacy Policy"));
+                    getString(R.string.menu_privacy));
 
-            ((MainActivity) requireActivity()).highLightNavigation(6, "Privacy Policy");
+            ((MainActivity) requireActivity()).highLightNavigation(9,
+                    getString(R.string.menu_privacy));
 
             if (((MainActivity) getActivity()).searchView != null) {
                 ((MainActivity) getActivity()).searchView.setVisibility(View.GONE);

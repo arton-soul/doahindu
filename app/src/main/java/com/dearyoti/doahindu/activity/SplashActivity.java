@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dearyoti.doahindu.R;
+import com.dearyoti.doahindu.ads.AdsConsentManager;
 import com.dearyoti.doahindu.utils.Constant;
 import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
 
@@ -26,14 +27,24 @@ public class SplashActivity extends AppCompatActivity {
         Typeface font = Typeface.createFromAsset(getAssets(), Constant.FONT_PATH_SEMIBOLD);
         name.setTypeface(font);
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                Intent i = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(i);
+        long startedAt = System.currentTimeMillis();
+        new AdsConsentManager(this).gatherConsent(() -> {
+            long remaining = Math.max(0, DURATION - (System.currentTimeMillis() - startedAt));
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+                int notificationTopicId = getIntent().getIntExtra("notification_topic_id", -1);
+                String topicId = getIntent().getStringExtra("topic_id");
+                if (notificationTopicId > 0) {
+                    mainIntent.putExtra("notification_topic_id", notificationTopicId);
+                } else if (topicId != null) {
+                    try {
+                        mainIntent.putExtra("notification_topic_id", Integer.parseInt(topicId));
+                    } catch (NumberFormatException ignored) {
+                    }
+                }
+                startActivity(mainIntent);
                 finish();
-            }
-        }, DURATION);
+            }, remaining);
+        });
     }
 }

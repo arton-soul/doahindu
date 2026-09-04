@@ -235,7 +235,7 @@ Tujuan: meningkatkan manfaat utama aplikasi bagi pembaca.
 - [x] Menambahkan tema terang, gelap, dan mengikuti sistem.
 - [x] Menambahkan opsi menjaga layar tetap menyala saat membaca.
 - [x] Menyimpan posisi baca terakhir per doa/cerita.
-- [ ] Memverifikasi seluruh opsi Fase 6A secara manual pada perangkat.
+- [x] Memverifikasi seluruh opsi Fase 6A secara manual pada perangkat.
 - [ ] Menambahkan pencarian judul dan isi doa.
 - [ ] Menyorot kata yang ditemukan.
 - [ ] Menambahkan filter kategori.
@@ -298,27 +298,27 @@ Setiap kelompok fitur berikut memerlukan persetujuan terpisah.
 
 Tujuan: memastikan integrasi eksternal aman dan mematuhi kebijakan distribusi.
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 8.
-- [ ] Menambahkan deep link agar notifikasi dapat membuka doa tertentu.
-- [ ] Menggunakan notification ID yang sesuai agar notifikasi tidak selalu saling menimpa.
-- [ ] Memperbaiki waktu dan konteks permintaan izin notifikasi.
-- [ ] Meninjau frekuensi dan posisi interstitial.
-- [ ] Menambahkan atau memperbarui consent iklan melalui UMP jika diperlukan.
-- [ ] Memastikan mode iklan sesuai consent pengguna.
-- [ ] Meninjau penggunaan permission `AD_ID`.
-- [ ] Meninjau `android:allowBackup` dan aturan backup.
-- [ ] Memastikan tidak ada secret sensitif dalam source/repository publik.
-- [ ] Memperbarui kebijakan privasi.
+- [x] Mendapatkan persetujuan untuk memulai Fase 8.
+- [x] Menambahkan deep link agar notifikasi dapat membuka doa tertentu.
+- [x] Menggunakan notification ID yang sesuai agar notifikasi tidak selalu saling menimpa.
+- [x] Memperbaiki waktu dan konteks permintaan izin notifikasi.
+- [x] Meninjau frekuensi dan posisi interstitial.
+- [x] Menambahkan atau memperbarui consent iklan melalui UMP jika diperlukan.
+- [x] Memastikan mode iklan sesuai consent pengguna.
+- [x] Meninjau penggunaan permission `AD_ID`.
+- [x] Meninjau `android:allowBackup` dan aturan backup.
+- [x] Memastikan tidak ada secret sensitif dalam source/repository publik.
+- [x] Memperbarui kebijakan privasi.
 - [ ] Memperbarui formulir Data Safety Google Play.
-- [ ] Memastikan URL eksternal hanya menggunakan HTTPS.
-- [ ] Menguji konfigurasi release dan R8 untuk Firebase serta Ads.
+- [x] Memastikan URL eksternal hanya menggunakan HTTPS.
+- [x] Menguji konfigurasi release dan R8 untuk Firebase serta Ads.
 
 Kriteria selesai:
 
 - [ ] Alur consent sesuai wilayah dan kebijakan yang berlaku saat rilis.
 - [ ] Kebijakan privasi sesuai dengan perilaku aplikasi aktual.
 - [ ] Notifikasi dan iklan tidak mengganggu fungsi utama membaca.
-- [ ] Tidak ada credential rahasia yang dipublikasikan.
+- [x] Tidak ada credential rahasia yang dipublikasikan.
 
 ## Fase 9 — Pengujian dan Persiapan Rilis
 
@@ -699,6 +699,26 @@ Catatan/risiko tersisa:
 - Perangkat fisik: versi lama dihapus dengan persetujuan pemilik karena signature APK tidak cocok, lalu APK terbaru berhasil dipasang pada Redmi Note 8 Pro/Android 10; data lokal instalasi lama terhapus, aplikasi aktif tanpa crash, ANR, atau `SQLiteException`
 - Verifikasi manual: pemilik menyatakan label `Mode Baca` dan thumbnail yang seragam pada setiap kategori sudah sesuai
 - Status Fase 6A: implementasi, pengujian otomatis, dan verifikasi manual perangkat selesai
+
+### Entri 21 — Fase 8A: Consent, Notifikasi, Privasi, dan Keamanan
+
+- Tanggal: 5 September 2026
+- Persetujuan pemilik: rekomendasi Fase 8A disetujui; identitas kebijakan menggunakan Dearyoti dan `made.sudi@gmail.com`
+- Consent iklan: menambahkan Google UMP 4.0.0; status consent diperbarui setiap aplikasi dibuka dan permintaan iklan hanya dimulai bila `canRequestAds()` mengizinkan
+- Pilihan privasi: menu `Privasi Iklan` ditampilkan ketika UMP menyatakan entry point diperlukan
+- Frekuensi iklan: interstitial dibatasi setiap lima kali pengguna selesai membaca; banner juga tidak dimuat sebelum consent iklan tersedia
+- Iklan pengujian: build debug memakai unit iklan demo resmi Google; build release mempertahankan ID produksi
+- Notifikasi: permintaan izin otomatis saat startup dihapus dan diganti aksi opt-in dengan penjelasan pada menu navigasi
+- Deep link notifikasi: data payload `topic_id` dapat membuka doa terkait; notification ID dan PendingIntent request code dibuat unik
+- Backup: cloud backup Android dinonaktifkan agar koleksi, catatan pribadi, riwayat, dan preferensi lokal tidak dikirim melalui mekanisme backup aplikasi
+- Keamanan: `MainActivity` tidak lagi exported; URL Play Store menggunakan HTTPS; WebView tetap tanpa JavaScript dan hanya membuka host HTTPS yang diizinkan
+- Secret: tidak ditemukan private/signing key yang terlacak; Firebase config dan signing credential tetap dikecualikan oleh `.gitignore`
+- Kebijakan privasi: ditulis ulang dalam Bahasa Indonesia agar menjelaskan data lokal, GitHub Pages, Ads/UMP, Firebase Analytics, FCM, notifikasi, backup, dan kontak pengembang
+- Tindakan eksternal tersisa: membuat/mengaktifkan pesan consent di AdMob Privacy & messaging, menerbitkan kebijakan privasi pada URL publik, dan memperbarui Data Safety di Play Console
+- Verifikasi otomatis: debug/unit test berhasil; lint 0 error dan 59 warning; build release dengan R8 berhasil; 8 instrumented test lulus pada Redmi Note 8 Pro/API 29 dan emulator/API 35
+- Perangkat fisik: APK debug dengan unit iklan demo berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro; aplikasi mencapai `MainActivity`, proses aktif, dan tidak ditemukan crash, `SecurityException`, atau ANR
+- Uji deep link: intent notifikasi simulasi dengan `topic_id=5` melewati `SplashActivity` dan berhasil membuka `StoriesActivity` pada perangkat fisik
+- Verifikasi tersisa: pengujian manual consent, iklan, notifikasi, dan deep link pada perangkat
 
 ## Catatan Rilis
 

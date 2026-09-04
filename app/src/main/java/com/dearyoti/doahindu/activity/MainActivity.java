@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.dearyoti.doahindu.R;
+import com.dearyoti.doahindu.ads.AdsConsentManager;
 import com.dearyoti.doahindu.database.DatabaseHelper;
 import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.fragment.AboutUsFragment;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CategoryFragment categoryFragment;
     private RecentFragment recentFragment;
     private NavigationView navigationView;
+    private boolean databaseReady;
 
     public static String whichFragment = "";
 
@@ -89,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
 
         init();
-        requestNotificationPermission();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -105,6 +106,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void explainAndRequestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, R.string.notification_permission_granted,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.notification_permission_title)
+                .setMessage(R.string.notification_permission_message)
+                .setPositiveButton(R.string.continue_text,
+                        (dialog, which) -> requestNotificationPermission())
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
     private void init() {
         drawerLayout = findViewById(R.id.drawer);
         navigationView = findViewById(R.id.navigation_drawer);
@@ -118,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         txtToolbarTitle.setTypeface(font);
 
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_item_ad_privacy).setVisible(
+                new AdsConsentManager(this).isPrivacyOptionsRequired());
         actionBarDrawerToggle = new ActionBarDrawerToggle(this,
                 drawerLayout, toolbar, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -173,6 +193,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_item_content_update:
                 checkContentUpdate(true);
                 return true;
+            case R.id.nav_item_notifications:
+                explainAndRequestNotificationPermission();
+                return true;
+            case R.id.nav_item_ad_privacy:
+                AdsConsentManager consentManager = new AdsConsentManager(this);
+                if (consentManager.isPrivacyOptionsRequired()) {
+                    consentManager.showPrivacyOptions(() -> { });
+                } else {
+                    Toast.makeText(this, R.string.ad_privacy_unavailable,
+                            Toast.LENGTH_SHORT).show();
+                }
+                return true;
 
             case R.id.nav_item_privacy:
                 drawerLayout.closeDrawers();
@@ -218,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private void shareApp() {
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, getString(R.string.app_name) + " \n\n" + "http://play.google.com/store/apps/details?id=" + getPackageName());
+        share.putExtra(Intent.EXTRA_TEXT, getString(R.string.app_name) + " \n\n" + "https://play.google.com/store/apps/details?id=" + getPackageName());
         startActivity(share);
     }
 
@@ -232,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("http://play.google.com/store/apps/details?id="
+                    Uri.parse("https://play.google.com/store/apps/details?id="
                             + appName)));
         }
     }
@@ -244,9 +276,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }, ignored -> {
             if (!isFinishing() && !isDestroyed()) {
+                databaseReady = true;
                 homeFragment = new HomeFragment();
                 setDefaultFragment(homeFragment);
                 checkContentUpdate(false);
+                openNotificationTopic(getIntent());
             }
         }, error -> {
             Log.e("Database", "Unable to initialize database", error);
@@ -255,6 +289,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setDefaultFragment(homeFragment);
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (databaseReady) openNotificationTopic(intent);
+    }
+
+    private void openNotificationTopic(Intent intent) {
+        if (intent == null) return;
+        int topicId = intent.getIntExtra("notification_topic_id", -1);
+        if (topicId <= 0) return;
+        intent.removeExtra("notification_topic_id");
+        Intent reader = new Intent(this, StoriesActivity.class);
+        reader.putExtra("topic_id", topicId);
+        reader.putExtra("flag", "from_topic");
+        startActivity(reader);
     }
 
     private void checkContentUpdate(boolean manual) {

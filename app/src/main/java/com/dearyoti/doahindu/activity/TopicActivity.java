@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dearyoti.doahindu.R;
+import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
 import com.dearyoti.doahindu.database.DatabaseExecutor;
@@ -166,6 +167,7 @@ public class TopicActivity extends AppCompatActivity implements TopicsAdapter.it
 
 
     public void bannerLoad() {
+        if (!MyApplication.areAdsInitialized()) return;
         adView = new AdView(this);
         adView.setAdUnitId(getResources().getString(R.string.banner_ids));
         int adWidth = Math.round(getResources().getDisplayMetrics().widthPixels
