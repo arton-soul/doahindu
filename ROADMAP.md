@@ -674,6 +674,10 @@ Catatan/risiko tersisa:
 - Build debug, unit test, dan lint: berhasil; lint 0 error dan 55 warning
 - Instrumented test: 5 test lulus pada emulator Android 15/API 35; mencakup ejaan, filter placeholder, ID stabil, gambar NULL, migrasi pengguna, dan updater
 - Catatan: ID 20 dan 21 sengaja tetap memiliki judul sama sampai konten final diberikan; materi doa tidak ditulis atau diubah selain keputusan penamaan di atas
+- GitHub Actions: workflow publikasi run #3 selesai sukses
+- Paket publik: `contentVersion 3` (`content-v3.sqlite`); ukuran dan SHA-256 hasil unduhan cocok dengan manifest
+- Perangkat fisik: APK terbaru berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
+- Verifikasi perangkat tersisa: pemeriksaan otomatis masih dalam interval 24 jam dan MIUI menolak tap ADB; pemilik perlu memilih menu `Perbarui Konten` untuk memasang versi 3 secara manual
 
 ## Catatan Rilis
 
