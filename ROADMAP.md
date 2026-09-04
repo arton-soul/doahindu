@@ -624,7 +624,7 @@ Catatan/risiko tersisa:
 - Versi terpasang: `3.4.1` (`versionCode 12`, target API 36)
 - Peluncuran: aplikasi berhasil dibuka dan proses tetap aktif
 - Log: tidak ditemukan fatal exception, ANR aplikasi, atau `SQLiteException`
-- Status: smoke test instalasi/peluncuran lulus; alur koleksi favorit dan catatan menunggu verifikasi manual pemilik
+- Status: smoke test instalasi/peluncuran lulus; alur koleksi favorit dan catatan kemudian dinyatakan normal oleh pemilik
 
 ### Entri 17 — Perbaikan Warna Teks Input Fase 7A
 
@@ -635,8 +635,8 @@ Catatan/risiko tersisa:
 - Build debug dan lint: berhasil; lint 0 error dan 55 warning
 - Perangkat: APK berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
 - Smoke test: aplikasi berhasil dibuka, proses aktif, dan tidak ditemukan crash, ANR, atau `SQLiteException`
-- Verifikasi tersisa: pemilik memeriksa keterbacaan teks saat mengetik nama koleksi dan catatan pada perangkat
-- Status Fase 7A: implementasi serta pengujian otomatis selesai; verifikasi visual manual masih menunggu konfirmasi pemilik
+- Verifikasi pemilik: teks nama koleksi dan catatan pribadi sudah terbaca; hasil pengujian dinyatakan baik
+- Status Fase 7A: implementasi, pengujian otomatis, dan verifikasi manual perangkat selesai
 
 ## Catatan Rilis
 
