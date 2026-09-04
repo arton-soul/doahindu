@@ -1,0 +1,16 @@
+<resources>
+
+    <dimen name="item_small_text">15sp</dimen>
+    <dimen name="item_medium_text">16sp</dimen>
+    <dimen name="item_semi_medium_text">18sp</dimen>
+
+    <dimen name="item_text_detail">17sp</dimen>
+
+    <dimen name="item_large_text">20sp</dimen>
+    <dimen name="item_extra_large_text">24sp</dimen>
+
+    <dimen name="banner_height">210dp</dimen>
+
+    <dimen name="design_navigation_icon_padding">20dp</dimen>
+
+</resources>

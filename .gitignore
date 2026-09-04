@@ -1,0 +1,28 @@
+*.iml
+.gradle/
+.gradle-user/
+.android-user/
+.backups/
+/local.properties
+/.idea/
+/.vscode/
+.DS_Store
+/build/
+/app/build/
+/app/release/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Firebase configuration is kept local until repository visibility and
+# credential-management policy have been explicitly decided.
+/app/google-services.json
+
+# Signing credentials must never be committed.
+*.jks
+*.keystore
+keystore.properties
+*.pem
+*.p12
+*.key

@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Doa Hindu</string>
+
+    <string name="menu_favorite">Favorit</string>
+    <string name="menu_about_us">Tentang Saya</string>
+    <string name="menu_privacy">Privacy Policy</string>
+
+    <string name="category_text">Kategori</string>
+    <string name="recent_text">Dilihat Sebelumnya</string>
+    <string name="no_item">Tidak Ditemukan</string>
+
+    <string name="splash_name">Doa Hindu</string>
+
+    <string name="nav_open">Buka</string>
+    <string name="nav_close">Tutup</string>
+
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+
+    <string name="exit_msg">Apakah Kamu Yakin mau Keluar?</string>
+
+    <string name="title_activity_scrolling">Stories</string>
+
+    <string name="title_activity_topic">Sub Bab</string>
+
+    <string name="admob_app_id">ca-app-pub-4098008677804088~1181209455</string>
+    <string name="banner_ids">ca-app-pub-4098008677804088/2657942651</string>
+    <string name="interstiall_ids">ca-app-pub-4098008677804088/4134675854</string>
+
+    <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
+    <string name="default_notification_channel_id">777</string>
+    <string name="default_notification_channel_name" translatable="true">offlinedoa</string>
+</resources>

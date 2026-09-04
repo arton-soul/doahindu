@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MyStories" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <!-- Custom fonts. -->
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:editTextColor">@color/white</item>
+        <item name="searchViewStyle">@style/MySearchView</item>
+
+    </style>
+
+    <style name="Theme.MyStories.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MyStories.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="textAppearanceToolbar">
+        <item name="android:textSize">@dimen/item_large_text</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="NavigationViewStyle">
+        <item name="android:textSize">@dimen/item_small_text</item>
+        <item name="fontFamily">@font/montserrat_semibold</item>
+    </style>
+
+    <style name="StyleBold">
+        <item name="fontFamily">@font/montserrat_semibold</item>
+    </style>
+
+    <style name="myToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:paddingRight">5dp</item>
+    </style>
+
+    <style name="myToolbarStyleTopic" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:paddingRight">1dp</item>
+    </style>
+
+    <style name="MySearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_favorite</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+
+</resources>

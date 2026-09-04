@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#FF9800</color>
+    <color name="colorAccent">#dedede</color>
+
+    <color name="white">#ffffff</color>
+    <color name="background_round">#cccccc</color>
+
+    <color name="text_color">#1d1d1d</color>
+    <color name="light_text_color">#3c4043</color>
+    <color name="line_color">#dedede</color>
+
+    <color name="background_color">#f8f9ff</color>
+
+    <color name="navigation_item_bg_checked">#dee1f6</color>
+    <color name="navigation_item_bg_default">#ffffff</color>
+
+</resources>

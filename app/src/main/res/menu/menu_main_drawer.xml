@@ -1,0 +1,54 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item_home"
+            android:checked="true"
+            android:icon="@drawable/ic_home"
+            android:title="Home"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_category"
+            android:checked="false"
+            android:icon="@drawable/ic_categories"
+            android:title="Kategori"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_recent"
+            android:checked="false"
+            android:icon="@drawable/ic_recent"
+            android:title="Dilihat Sebelumnya"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_favorites"
+            android:checked="false"
+            android:icon="@drawable/ic_favorite"
+            android:title="Favorit"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_rate"
+            android:checked="false"
+            android:icon="@drawable/ic_rate"
+            android:title="Beri Rating"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_share"
+            android:checked="false"
+            android:icon="@drawable/ic_share_app"
+            android:title="Bagikan App"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_privacy"
+            android:checked="false"
+            android:icon="@drawable/ic_privacy_policy"
+            android:title="Privacy Policy"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/nav_item_about"
+            android:checked="false"
+            android:icon="@drawable/ic_about_us"
+            android:title="Tentang Saya"
+            app:showAsAction="always" />
+    </group>
+</menu>
