@@ -198,11 +198,11 @@ Kriteria selesai:
 
 Tujuan: meningkatkan mutu, konsistensi, dan keterlacakan isi doa.
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 5.
-- [ ] Memeriksa duplikat `Sarascamuscaya 3`.
+- [x] Mendapatkan persetujuan untuk memulai audit Fase 5.
+- [x] Memeriksa duplikat `Sarascamuscaya 3`; ditemukan pada ID 20 dan 21 dengan isi placeholder identik.
 - [ ] Memverifikasi ejaan `Sarascamuscaya` atau `Sarasamuccaya` dengan editor konten.
-- [ ] Memvalidasi seluruh BLOB gambar berukuran sangat kecil.
-- [ ] Memeriksa doa yang sangat pendek untuk memastikan isinya lengkap.
+- [x] Memvalidasi seluruh BLOB gambar berukuran sangat kecil; 52 topik hanya menyimpan signature PNG 8 byte, bukan gambar lengkap.
+- [x] Memeriksa doa yang sangat pendek; ID 18–21 berisi placeholder identik 48 karakter, bukan konten final.
 - [ ] Menambahkan sumber/referensi pada setiap konten jika tersedia.
 - [ ] Menambahkan urutan konten eksplisit.
 - [ ] Menambahkan tanggal dibuat dan diperbarui.
@@ -637,6 +637,22 @@ Catatan/risiko tersisa:
 - Smoke test: aplikasi berhasil dibuka, proses aktif, dan tidak ditemukan crash, ANR, atau `SQLiteException`
 - Verifikasi pemilik: teks nama koleksi dan catatan pribadi sudah terbaca; hasil pengujian dinyatakan baik
 - Status Fase 7A: implementasi, pengujian otomatis, dan verifikasi manual perangkat selesai
+
+### Entri 18 — Audit Read-only Konten Fase 5
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: audit Fase 5 disetujui; tidak ada izin perubahan materi keagamaan
+- Database: `app/src/main/assets/doahindu1.sqlite`, dibuka read-only; SHA-256 source `298A075F16BA8D5A6E747EEE6A2FAEB799E1B8EF4D425C537D19B89E9F091376`
+- Integritas/skema: `integrity_check=ok`, `user_version=1`, 7 kategori, 59 topik, dan 3 cerita terbaru; tidak ada judul/isi kosong atau relasi kategori yatim
+- Duplikat: `Sarascamuscaya 3` muncul pada `topic_id` 20 dan 21
+- Placeholder: ID 18–21 (`Sarascamuscaya 1`, `2`, `3`, `3`) memiliki isi identik 48 karakter: `Masih dalam pengerjaan, tunggu update berikutnya`
+- Ejaan: database konsisten memakai `Sarascamuscaya`; keputusan perubahan menjadi `Sarasamuccaya` memerlukan editor/pemilik materi
+- Gambar topik: 52 dari 59 BLOB hanya 8 byte berupa signature PNG `89504E470D0A1A0A` dan bukan file gambar lengkap
+- Gambar lengkap: 7 topik memiliki PNG lengkap, yaitu ID 2, 5, 9, 15, 18, 23, dan 65; masing-masing mewakili gambar kategori terkait
+- Konsistensi nama: ID 67 memakai spasi ganda pada `Pupuh  Sinom`
+- Cerita terbaru: tiga entri merupakan tabel/konten mandiri; ID-nya tidak harus merujuk `tbl_topics`, sehingga `Kutukan Ekalaya` tidak langsung dinyatakan rusak
+- Perubahan konten/database: tidak ada
+- Keputusan tersisa: tindakan pada duplikat ID 21, ejaan judul/kategori, placeholder ID 18–21, strategi gambar kosong, dan spasi ganda menunggu persetujuan editorial
 
 ## Catatan Rilis
 
