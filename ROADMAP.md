@@ -508,7 +508,10 @@ Catatan/risiko tersisa:
 - Unit test: 1 test template lulus, tanpa failure/error
 - Lint: berhasil dengan 0 error dan 54 warning, sama dengan hasil akhir Fase 2
 - Uji perangkat fisik: upgrade APK ditolak Android karena tanda tangan APK terpasang berbeda; aplikasi/data lama tidak dihapus
-- Uji emulator: mengalami kendala tanda tangan yang sama pada paket lama; tidak dilakukan uninstall agar data pengujian tidak dihapus tanpa persetujuan
+- Uji emulator: setelah mendapat izin pemilik, paket lama dihapus hanya dari emulator API 35 dan APK baru berhasil dipasang secara bersih
+- Verifikasi database emulator: `doahindu1.sqlite` dan `doahindu_user.sqlite` terbentuk sebagai file terpisah; penulisan favorit/riwayat memperbesar WAL database pengguna tanpa mengubah file konten
+- Verifikasi alur emulator: beranda, kategori, dan detail “Kata Pengantar” berhasil dibuka melalui navigasi berbasis ID; favorit berhasil ditambahkan dan label berubah menjadi “Hapus dari favorit”
+- Stabilitas emulator: proses aplikasi tetap hidup dan tidak ditemukan crash, ANR aplikasi, atau exception SQLite pada log
 - Pengujian tersisa: migrasi dengan signing key yang sama, pengujian repository/migrasi otomatis, dan pemindahan operasi database dari UI thread
 - Status: fondasi pemisahan data selesai; Fase 3 masih berjalan
 
