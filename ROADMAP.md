@@ -309,13 +309,13 @@ Tujuan: memastikan integrasi eksternal aman dan mematuhi kebijakan distribusi.
 - [x] Meninjau `android:allowBackup` dan aturan backup.
 - [x] Memastikan tidak ada secret sensitif dalam source/repository publik.
 - [x] Memperbarui kebijakan privasi.
-- [ ] Memperbarui formulir Data Safety Google Play.
+- [x] Memperbarui formulir Data Safety Google Play.
 - [x] Memastikan URL eksternal hanya menggunakan HTTPS.
 - [x] Menguji konfigurasi release dan R8 untuk Firebase serta Ads.
 
 Kriteria selesai:
 
-- [ ] Alur consent sesuai wilayah dan kebijakan yang berlaku saat rilis.
+- [x] Alur consent sesuai wilayah dan kebijakan yang berlaku saat rilis.
 - [x] Kebijakan privasi sesuai dengan perilaku aplikasi aktual.
 - [x] Notifikasi dan iklan tidak mengganggu fungsi utama membaca berdasarkan verifikasi manual perangkat.
 - [x] Tidak ada credential rahasia yang dipublikasikan.
@@ -716,14 +716,12 @@ Catatan/risiko tersisa:
 - Kebijakan privasi: ditulis ulang dalam Bahasa Indonesia agar menjelaskan data lokal, GitHub Pages, Ads/UMP, Firebase Analytics, FCM, notifikasi, backup, dan kontak pengembang
 - Kebijakan privasi publik: `https://dearyoti.blogspot.com/p/kebijakan-privasi-doa-hindu-terakhir.html`; terverifikasi HTTPS, status 200, dapat diakses tanpa login, serta memuat identitas dan isi kebijakan yang disetujui
 - AdMob: pemilik mengonfirmasi pesan consent pada Privacy & messaging telah selesai dikonfigurasi
-- Data Safety: panduan pengisian konservatif berdasarkan SDK dan perilaku aplikasi tersedia di `DATA_SAFETY_CHECKLIST.md`
-- Tindakan eksternal tersisa: mengisi, meninjau, dan mengirim Data Safety di Play Console
+- Data Safety: pemilik mengonfirmasi formulir telah diisi, ditinjau, dan dikirim menggunakan panduan `DATA_SAFETY_CHECKLIST.md`
 - Verifikasi otomatis: debug/unit test berhasil; lint 0 error dan 59 warning; build release dengan R8 berhasil; 8 instrumented test lulus pada Redmi Note 8 Pro/API 29 dan emulator/API 35
 - Perangkat fisik: APK debug dengan unit iklan demo berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro; aplikasi mencapai `MainActivity`, proses aktif, dan tidak ditemukan crash, `SecurityException`, atau ANR
 - Uji deep link: intent notifikasi simulasi dengan `topic_id=5` melewati `SplashActivity` dan berhasil membuka `StoriesActivity` pada perangkat fisik
 - Verifikasi manual: pemilik menguji consent/privasi iklan, opt-in notifikasi, kebijakan privasi, frekuensi interstitial, dan alur membaca pada perangkat; hasil dinyatakan baik
-- Status Fase 8A: implementasi teknis dan verifikasi perangkat selesai
-- Pekerjaan eksternal tersisa: mengisi, meninjau, dan mengirim Data Safety di Play Console menggunakan `DATA_SAFETY_CHECKLIST.md`
+- Status Fase 8: implementasi, konfigurasi eksternal, dokumentasi, pengujian otomatis, dan verifikasi perangkat selesai
 
 ## Catatan Rilis
 

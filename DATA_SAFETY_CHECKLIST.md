@@ -84,16 +84,16 @@ akan menghapus data lokal tersebut.
 
 ## Pemeriksaan konfigurasi Play Console
 
-- [ ] Masukkan URL kebijakan privasi publik.
-- [ ] Nyatakan bahwa aplikasi berisi iklan.
-- [ ] Pilih **Ya** untuk pengumpulan atau pembagian data.
-- [ ] Nyatakan data dienkripsi saat transit.
-- [ ] Nyatakan aplikasi tidak menyediakan akun pengguna.
-- [ ] Deklarasikan empat kelompok data di atas.
-- [ ] Pastikan tujuan dan status collected/shared cocok dengan formulir.
-- [ ] Tinjau preview Data Safety agar konsisten dengan kebijakan privasi.
-- [ ] Simpan screenshot atau ekspor CSV deklarasi final untuk arsip rilis.
-- [ ] Kirim formulir dan tunggu status diterima Play Console.
+- [x] Masukkan URL kebijakan privasi publik.
+- [x] Nyatakan bahwa aplikasi berisi iklan.
+- [x] Pilih **Ya** untuk pengumpulan atau pembagian data.
+- [x] Nyatakan data dienkripsi saat transit.
+- [x] Nyatakan aplikasi tidak menyediakan akun pengguna.
+- [x] Deklarasikan empat kelompok data di atas.
+- [x] Pastikan tujuan dan status collected/shared cocok dengan formulir.
+- [x] Tinjau preview Data Safety agar konsisten dengan kebijakan privasi.
+- [x] Simpan screenshot atau ekspor CSV deklarasi final untuk arsip rilis.
+- [x] Kirim formulir dan tunggu status diterima Play Console.
 
 ## Sumber resmi
 
@@ -105,4 +105,3 @@ akan menghapus data lokal tersebut.
   `https://firebase.google.com/docs/android/play-data-disclosure`
 - Google Analytics for Firebase data disclosure:
   `https://support.google.com/analytics/answer/11582702`
-
