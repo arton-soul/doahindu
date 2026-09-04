@@ -730,14 +730,24 @@ Catatan/risiko tersisa:
 - Persyaratan Play: target API 36 memenuhi persyaratan aplikasi/update ponsel yang berlaku sejak 31 Agustus 2026
 - Build: debug dan unit test berhasil; `bundleRelease` dengan R8 berhasil menghasilkan `app-release.aab` sekitar 12,4 MB serta mapping R8
 - Signing: AAB dan APK release belum ditandatangani; proyek belum memiliki `signingConfig` atau upload keystore
-- Versi: masih `versionCode 12` dan `versionName 3.4.1`; versi berikutnya belum ditetapkan dan harus lebih tinggi daripada artefak aktif di Play Console
+- Versi rilis: pemilik menetapkan `versionCode 13` dan `versionName 4.0`, naik dari versi sebelumnya (`12`/`3.4.1`)
 - Instalasi bersih: data aplikasi pada emulator API 35 dihapus, APK debug dipasang kembali, dan database bawaan dapat diinisialisasi
 - Offline: startup instalasi bersih tanpa Wi-Fi/data berhasil masuk ke `MainActivity` tanpa crash atau `SQLiteException`
 - Perbaikan: `SplashActivity` mendapat timeout consent lima detik agar kegagalan atau lambatnya jaringan UMP tidak menahan fungsi offline; iklan tidak dimuat bila consent belum tersedia
 - Regresi: lint berhasil dengan 0 error dan 59 warning; 8 instrumented test kembali lulus pada Redmi Note 8 Pro/API 29 dan emulator/API 35 setelah perbaikan startup
 - Upgrade: upgrade debug pada perangkat fisik sudah teruji, tetapi upgrade nyata dari versi Play belum dapat divalidasi tanpa signing key yang sama
-- Blocker rilis: perlu memastikan status aplikasi lama di Play Console, `versionCode` aktif tertinggi, dan ketersediaan upload/app signing key lama
+- Signing: pemilik mengonfirmasi keystore lama masih tersedia; lokasi dan alias lokal masih diperlukan untuk menghubungkan build release
 
 ## Catatan Rilis
 
-Belum ada perubahan aplikasi yang siap dirilis. Bagian ini akan diisi setelah implementasi dan verifikasi dimulai.
+### Versi 4.0 (`versionCode 13`) — Draf
+
+- Target Android 16/API 36 dan modernisasi dependency/build system.
+- Pembaruan database konten melalui GitHub tanpa memperbarui APK.
+- Koleksi favorit dan catatan pribadi yang terpisah dari database konten.
+- Mode Baca: ukuran teks, jarak baris, tema, layar tetap aktif, dan posisi baca.
+- Thumbnail doa konsisten berdasarkan kategori.
+- Consent iklan UMP, notifikasi opt-in/deep link, dan kebijakan privasi terbaru.
+- Perbaikan keamanan, aksesibilitas, edge-to-edge, stabilitas database, dan mode offline.
+
+Status: kandidat rilis belum final; signing, pengujian upgrade release, dan pemeriksaan Play Console masih harus diselesaikan.
