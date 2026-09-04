@@ -185,9 +185,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<TopicsModel> getFavoriteTopics() {
-        ArrayList<TopicsModel> list = new ArrayList<>();
+        return getFavoriteTopics(UserDatabaseHelper.DEFAULT_COLLECTION_ID);
+    }
 
-        for (Integer topicId : userDatabase.getFavoriteIds()) {
+    public ArrayList<TopicsModel> getFavoriteTopics(long collectionId) {
+        ArrayList<TopicsModel> list = new ArrayList<>();
+        for (Integer topicId : userDatabase.getFavoriteIds(collectionId)) {
             TopicsModel topic = getTopicById(topicId);
             if (topic != null) {
                 list.add(topic);
@@ -199,6 +202,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Boolean isFavorite(Integer topic_id) {
         return userDatabase.isFavorite(topic_id);
     }
+
+    public Map<Long, String> getFavoriteCollections() { return userDatabase.getCollections(); }
+    public long createFavoriteCollection(String name) { return userDatabase.createCollection(name); }
+    public boolean renameFavoriteCollection(long id, String name) { return userDatabase.renameCollection(id, name); }
+    public boolean deleteFavoriteCollection(long id) { return userDatabase.deleteCollection(id); }
+    public boolean addTopicToCollection(long id, int topicId) { return userDatabase.addToCollection(id, topicId); }
+    public boolean removeTopicFromCollection(long id, int topicId) { return userDatabase.removeFromCollection(id, topicId); }
+    public ArrayList<Long> getCollectionIdsForTopic(int topicId) { return userDatabase.getCollectionIdsForTopic(topicId); }
+    public String getTopicNote(int topicId) { return userDatabase.getNote(topicId); }
+    public boolean saveTopicNote(int topicId, String note) { return userDatabase.saveNote(topicId, note); }
 
     public ArrayList<CategoryModel> getAllCategories() {
         ArrayList<CategoryModel> list = new ArrayList<>();

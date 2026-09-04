@@ -32,6 +32,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     private DatabaseHelper db;
     private itemInterface itemInter;
     private Boolean isFavorite;
+    private long favoriteCollectionId = 1L;
 
     public TopicsAdapter(Context context, ArrayList<TopicsModel> topicsList, Boolean isFavorite, itemInterface itemInterface) {
         this.context = context;
@@ -39,6 +40,12 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         this.isFavorite = isFavorite;
         this.itemInter = itemInterface;
         this.db = new DatabaseHelper(context.getApplicationContext());
+    }
+
+    public TopicsAdapter(Context context, ArrayList<TopicsModel> topicsList, long collectionId,
+                         itemInterface itemInterface) {
+        this(context, topicsList, true, itemInterface);
+        favoriteCollectionId = collectionId;
     }
 
     public void updateList(ArrayList<TopicsModel> list) {
@@ -82,16 +89,18 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
             public void onClick(View view) {
                 int topicId = topicsModel.getTopic_id();
                 boolean newFavoriteState = !Boolean.TRUE.equals(topicsModel.getIs_topic_fav());
-                DatabaseExecutor.execute(() -> db.updateFavorite(topicId, newFavoriteState ? 1 : 0), updated -> {
+                DatabaseExecutor.execute(() -> isFavorite
+                        ? db.removeTopicFromCollection(favoriteCollectionId, topicId)
+                        : db.updateFavorite(topicId, newFavoriteState ? 1 : 0), updated -> {
                     if (!updated) {
                         return;
                     }
-                    topicsModel.setIs_topic_fav(newFavoriteState);
-                    showFavorite(holder, newFavoriteState);
+                    topicsModel.setIs_topic_fav(isFavorite ? false : newFavoriteState);
+                    showFavorite(holder, isFavorite ? false : newFavoriteState);
                     Snackbar.make(view, newFavoriteState
                             ? "Story added to favorite." : "Story removed from favorite.",
                             Snackbar.LENGTH_LONG).show();
-                    if (!newFavoriteState && isFavorite) {
+                    if (isFavorite) {
                         itemInter.itemRemove();
                     }
                 }, error -> Snackbar.make(view, "Unable to update favorite.",

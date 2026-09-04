@@ -261,8 +261,16 @@ Setiap kelompok fitur berikut memerlukan persetujuan terpisah.
 
 ### Favorit dan catatan
 
-- [ ] Menambahkan folder atau koleksi favorit.
-- [ ] Menambahkan catatan pribadi pada doa.
+- [x] Mendapatkan persetujuan untuk memulai Fase 7A.
+- [x] Menaikkan database pengguna ke versi 2 dengan migrasi non-destruktif.
+- [x] Memigrasikan favorit lama ke koleksi bawaan `Favorit`.
+- [x] Menambahkan folder atau koleksi favorit.
+- [x] Mendukung satu doa di beberapa koleksi.
+- [x] Menambahkan pembuatan, penggantian nama, dan penghapusan koleksi non-bawaan.
+- [x] Menambahkan catatan pribadi pada doa.
+- [x] Memastikan koleksi dan catatan tetap tersedia setelah database konten diganti.
+- [x] Menambahkan instrumented test upgrade database pengguna versi 1 ke versi 2.
+- [ ] Memverifikasi seluruh alur koleksi dan catatan secara manual pada perangkat.
 - [ ] Menambahkan ekspor/backup lokal jika disetujui.
 
 ### Bahasa dan teks
@@ -590,6 +598,22 @@ Catatan/risiko tersisa:
 - Uji regresi internet: `contentVersion 2` kembali berhasil terpasang, file backup terbentuk, dan database pengguna tetap tersedia
 - Log regresi: tidak ditemukan lagi `file renamed while open`, `SQLiteException`, atau fatal exception
 - Status: warning koneksi terbuka Fase 4 selesai diperbaiki dan tervalidasi
+
+### Entri 15 — Fase 7A: Koleksi Favorit dan Catatan Pribadi
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: lompat ke Fase 7 hanya untuk koleksi favorit dan catatan pribadi disetujui
+- Database pengguna: versi dinaikkan dari 1 ke 2 dengan tabel koleksi, relasi koleksi-doa, dan catatan
+- Migrasi: seluruh `user_favorite` lama disalin ke koleksi bawaan `Favorit` tanpa menghapus tabel/data lama
+- Koleksi: pengguna dapat membuat koleksi, mengganti nama, menghapus koleksi non-bawaan, dan memasukkan satu doa ke beberapa koleksi
+- Layar favorit: menambahkan pemilih koleksi, tombol koleksi baru, dan menu pengelolaan; penghapusan item hanya berlaku pada koleksi aktif
+- Halaman doa: ikon favorit membuka pemilih multi-koleksi dan menyediakan pembuatan koleksi baru
+- Catatan pribadi: menu pada halaman doa membuka editor; teks kosong menghapus catatan
+- Keamanan data: koleksi dan catatan berada di `doahindu_user.sqlite` sehingga tidak ikut diganti oleh pembaruan konten GitHub
+- Build debug dan unit test: berhasil
+- Lint: berhasil dengan 0 error dan 55 warning
+- Instrumented test: 4 test lulus pada emulator Android 15/API 35, termasuk upgrade user database v1→v2, multi-koleksi, catatan, penghapusan koleksi, dan replacement database konten
+- Pengujian tersisa: verifikasi UI manual pada perangkat oleh pemilik aplikasi
 
 ## Catatan Rilis
 

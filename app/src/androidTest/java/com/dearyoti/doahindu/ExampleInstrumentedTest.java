@@ -30,6 +30,28 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     @Test
+    public void upgradesUserDatabaseV1IntoDefaultCollection() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DatabaseHelper.closeAllInstances();
+        context.deleteDatabase("doahindu_user.sqlite");
+        java.io.File file = context.getDatabasePath("doahindu_user.sqlite");
+        file.getParentFile().mkdirs();
+        try (SQLiteDatabase versionOne = SQLiteDatabase.openOrCreateDatabase(file, null)) {
+            versionOne.execSQL("CREATE TABLE user_favorite "
+                    + "(topic_id INTEGER PRIMARY KEY NOT NULL, created_at INTEGER NOT NULL)");
+            versionOne.execSQL("CREATE TABLE user_recent "
+                    + "(topic_id INTEGER PRIMARY KEY NOT NULL, last_viewed TEXT NOT NULL)");
+            versionOne.execSQL("INSERT INTO user_favorite VALUES (42, 1000)");
+            versionOne.setVersion(1);
+        }
+        DatabaseHelper upgraded = new DatabaseHelper(context);
+        assertEquals("Favorit", upgraded.getFavoriteCollections().get(1L));
+        assertTrue(upgraded.isFavorite(42));
+        assertTrue(upgraded.getCollectionIdsForTopic(42).contains(1L));
+        upgraded.close();
+    }
+
+    @Test
     public void migratesLegacyStateAndKeepsItWhenContentIsReplaced() throws Exception {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         appContext.deleteDatabase(Constant.DB_NAME);
@@ -70,6 +92,14 @@ public class ExampleInstrumentedTest {
             assertEquals(1, foreignKeys.getInt(0));
         }
         assertTrue(migratedDatabase.isFavorite(topicId));
+        assertEquals("Favorit", migratedDatabase.getFavoriteCollections().get(1L));
+        long ceremonyCollection = migratedDatabase.createFavoriteCollection("Upacara");
+        assertTrue(ceremonyCollection > 1L);
+        assertTrue(migratedDatabase.addTopicToCollection(ceremonyCollection, topicId));
+        assertTrue(migratedDatabase.getCollectionIdsForTopic(topicId).contains(1L));
+        assertTrue(migratedDatabase.getCollectionIdsForTopic(topicId).contains(ceremonyCollection));
+        assertTrue(migratedDatabase.saveTopicNote(topicId, "Catatan pribadi pengujian"));
+        assertEquals("Catatan pribadi pengujian", migratedDatabase.getTopicNote(topicId));
         assertEquals(topicId, migratedDatabase.getRecentViewed().get(0).getTopic_id().intValue());
         assertTrue(migratedDatabase.getSearchTopics(categories.get(0).getCat_id(),
                 "%' OR 1=1 --").isEmpty());
@@ -79,6 +109,15 @@ public class ExampleInstrumentedTest {
         DatabaseHelper replacedContentDatabase = new DatabaseHelper(appContext);
         replacedContentDatabase.copyDataBase();
         assertTrue(replacedContentDatabase.isFavorite(topicId));
+        assertEquals("Upacara", replacedContentDatabase.getFavoriteCollections()
+                .get(ceremonyCollection));
+        assertTrue(replacedContentDatabase.getFavoriteTopics(ceremonyCollection).stream()
+                .anyMatch(topic -> topic.getTopic_id() == topicId));
+        assertEquals("Catatan pribadi pengujian", replacedContentDatabase.getTopicNote(topicId));
+        assertTrue(replacedContentDatabase.deleteFavoriteCollection(ceremonyCollection));
+        assertTrue(replacedContentDatabase.isFavorite(topicId));
+        assertTrue(replacedContentDatabase.saveTopicNote(topicId, ""));
+        assertEquals("", replacedContentDatabase.getTopicNote(topicId));
         assertEquals(topicId,
                 replacedContentDatabase.getRecentViewed().get(0).getTopic_id().intValue());
         replacedContentDatabase.close();

@@ -14,6 +14,19 @@
     <string name="action_share">Bagikan doa</string>
     <string name="action_add_favorite">Tambahkan ke favorit</string>
     <string name="action_remove_favorite">Hapus dari favorit</string>
+    <string name="favorite_collections">Koleksi favorit</string>
+    <string name="new_collection">Koleksi baru</string>
+    <string name="collection_name">Nama koleksi</string>
+    <string name="rename_collection">Ganti nama</string>
+    <string name="delete_collection">Hapus koleksi</string>
+    <string name="delete_collection_confirmation">Hapus koleksi ini? Doa di dalamnya tidak akan terhapus.</string>
+    <string name="personal_note">Catatan pribadi</string>
+    <string name="personal_note_hint">Tulis catatan untuk doa ini</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="saved">Tersimpan</string>
+    <string name="collection_required">Buat sedikitnya satu koleksi.</string>
+    <string name="manage">Kelola</string>
     <string name="category_image">Gambar kategori</string>
     <string name="topic_image">Gambar doa</string>
 

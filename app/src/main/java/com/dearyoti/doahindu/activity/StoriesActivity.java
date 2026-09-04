@@ -10,10 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.activity.OnBackPressedCallback;
 import androidx.core.content.ContextCompat;
@@ -33,6 +35,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class StoriesActivity extends AppCompatActivity {
 
@@ -177,27 +182,69 @@ public class StoriesActivity extends AppCompatActivity {
         navFavorite = (ImageView) menu.findItem(R.id.nav_stories_fav).getActionView();
         DatabaseExecutor.execute(() -> db.isFavorite(selectedTopicId), this::showFavorite,
                 error -> showFavorite(false));
-        navFavorite.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                DatabaseExecutor.execute(() -> {
-                    boolean newState = !db.isFavorite(selectedTopicId);
-                    return db.updateFavorite(selectedTopicId, newState ? 1 : 0)
-                            ? newState : null;
-                }, newState -> {
-                    if (newState == null) {
-                        return;
-                    }
-                    showFavorite(newState);
-                    Snackbar.make(view, newState ? "Story added to favorite."
-                                    : "Story removed from favorite.",
-                            Snackbar.LENGTH_LONG).show();
-                }, error -> Snackbar.make(view, "Unable to update favorite.",
-                        Snackbar.LENGTH_LONG).show());
-            }
-        });
+        navFavorite.setOnClickListener(view -> showCollectionPicker());
         return true;
+    }
+
+    private void showCollectionPicker() {
+        DatabaseExecutor.execute(() -> {
+            Map<Long, String> collections = db.getFavoriteCollections();
+            ArrayList<Long> selected = db.getCollectionIdsForTopic(selectedTopicId);
+            return new Object[]{collections, selected};
+        }, data -> {
+            @SuppressWarnings("unchecked") Map<Long, String> collections =
+                    (LinkedHashMap<Long, String>) data[0];
+            @SuppressWarnings("unchecked") ArrayList<Long> selected = (ArrayList<Long>) data[1];
+            Long[] ids = collections.keySet().toArray(new Long[0]);
+            String[] names = collections.values().toArray(new String[0]);
+            boolean[] checked = new boolean[ids.length];
+            for (int i = 0; i < ids.length; i++) checked[i] = selected.contains(ids[i]);
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.favorite_collections)
+                    .setMultiChoiceItems(names, checked, (d, which, value) -> checked[which] = value)
+                    .setPositiveButton(R.string.save, (d, which) -> DatabaseExecutor.execute(() -> {
+                        for (int i = 0; i < ids.length; i++) {
+                            if (checked[i]) db.addTopicToCollection(ids[i], selectedTopicId);
+                            else db.removeTopicFromCollection(ids[i], selectedTopicId);
+                        }
+                        return db.isFavorite(selectedTopicId);
+                    }, favorite -> { showFavorite(favorite); Snackbar.make(navFavorite,
+                            R.string.saved, Snackbar.LENGTH_SHORT).show(); }, error -> {}))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.new_collection, null).create();
+            dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+                    .setOnClickListener(v -> showCreateCollectionDialog(this::showCollectionPicker)));
+            dialog.show();
+        }, error -> Snackbar.make(navFavorite, R.string.update_invalid, Snackbar.LENGTH_LONG).show());
+    }
+
+    private void showCreateCollectionDialog(Runnable afterCreated) {
+        EditText input = new EditText(this); input.setHint(R.string.collection_name);
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.new_collection)
+                .setView(input).setPositiveButton(R.string.save, null)
+                .setNegativeButton(R.string.cancel, null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(v -> {
+                    String name = input.getText().toString().trim();
+                    if (name.isEmpty()) { input.setError(getString(R.string.collection_name)); return; }
+                    DatabaseExecutor.execute(() -> db.createFavoriteCollection(name), id -> {
+                        if (id > 0) { dialog.dismiss(); afterCreated.run(); }
+                        else input.setError(getString(R.string.collection_name));
+                    }, error -> input.setError(getString(R.string.collection_name)));
+                }));
+        dialog.show();
+    }
+
+    private void showNoteDialog() {
+        DatabaseExecutor.execute(() -> db.getTopicNote(selectedTopicId), note -> {
+            EditText input = new EditText(this); input.setHint(R.string.personal_note_hint);
+            input.setMinLines(4); input.setText(note); input.setSelection(input.length());
+            new AlertDialog.Builder(this).setTitle(R.string.personal_note).setView(input)
+                    .setPositiveButton(R.string.save, (d, w) -> DatabaseExecutor.execute(
+                            () -> db.saveTopicNote(selectedTopicId, input.getText().toString()),
+                            saved -> Snackbar.make(txtStory, R.string.saved, Snackbar.LENGTH_SHORT).show(),
+                            error -> {})).setNegativeButton(R.string.cancel, null).show();
+        }, error -> {});
     }
 
     @Override
@@ -208,6 +255,10 @@ public class StoriesActivity extends AppCompatActivity {
 
         int id = item.getItemId();
         if (id == R.id.nav_stories_fav) {
+            return true;
+        }
+        if (id == R.id.nav_stories_note) {
+            showNoteDialog();
             return true;
         }
 
