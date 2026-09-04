@@ -549,6 +549,16 @@ Catatan/risiko tersisa:
 - Status: fondasi lokal selesai dan tervalidasi; endpoint produksi masih kosong sehingga aplikasi aman menampilkan status belum dikonfigurasi
 - Pekerjaan tersisa: menyediakan repositori GitHub dan URL Pages, mengisi `CONTENT_MANIFEST_URL`, menjalankan workflow pertama, lalu menguji unduhan nyata dan pembaruan tanpa APK
 
+### Entri 12 — Konfigurasi Repositori Produksi Fase 4
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: menghubungkan dan mengunggah proyek ke GitHub disetujui
+- Repositori: `https://github.com/arton-soul/doahindu`
+- Branch produksi: `main`
+- Endpoint manifest: `https://arton-soul.github.io/doahindu/manifest.json`
+- Perubahan: mengisi `CONTENT_MANIFEST_URL` dan menyesuaikan dokumentasi publikasi
+- Status upload dan GitHub Pages: akan dicatat setelah push dan workflow pertama diverifikasi
+
 ## Catatan Rilis
 
 Belum ada perubahan aplikasi yang siap dirilis. Bagian ini akan diisi setelah implementasi dan verifikasi dimulai.

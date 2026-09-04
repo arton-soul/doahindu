@@ -15,11 +15,11 @@ Alur publikasi yang disiapkan:
 5. Aplikasi memeriksa manifest maksimal sekali setiap 24 jam atau saat pengguna
    memilih menu **Perbarui Konten**.
 
-Sebelum rilis, aktifkan GitHub Pages dengan sumber **GitHub Actions**, kemudian
-isi `CONTENT_MANIFEST_URL` pada `app/build.gradle` menggunakan pola:
+Sebelum rilis, aktifkan GitHub Pages dengan sumber **GitHub Actions**. Endpoint
+produksi yang telah dikonfigurasi pada `app/build.gradle` adalah:
 
 ```text
-https://NAMA-PENGGUNA.github.io/NAMA-REPOSITORY/manifest.json
+https://arton-soul.github.io/doahindu/manifest.json
 ```
 
 Database yang gagal checksum, melebihi 25 MiB, menggunakan schema yang tidak

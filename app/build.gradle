@@ -11,7 +11,7 @@ android {
         versionCode 12
         versionName "3.4.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "CONTENT_MANIFEST_URL", '""'
+        buildConfigField "String", "CONTENT_MANIFEST_URL", '"https://arton-soul.github.io/doahindu/manifest.json"'
     }
     buildTypes {
         release {
