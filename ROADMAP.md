@@ -615,6 +615,17 @@ Catatan/risiko tersisa:
 - Instrumented test: 4 test lulus pada emulator Android 15/API 35, termasuk upgrade user database v1→v2, multi-koleksi, catatan, penghapusan koleksi, dan replacement database konten
 - Pengujian tersisa: verifikasi UI manual pada perangkat oleh pemilik aplikasi
 
+### Entri 16 — Build dan Smoke Test Fase 7A pada Perangkat Fisik
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: build dan instalasi pada perangkat diminta
+- Perangkat: Xiaomi Redmi Note 8 Pro, Android 10/API 29
+- Instalasi: APK debug terbaru berhasil dipasang sebagai upgrade (`-r`); aplikasi lama tidak di-uninstall dan data dipertahankan
+- Versi terpasang: `3.4.1` (`versionCode 12`, target API 36)
+- Peluncuran: aplikasi berhasil dibuka dan proses tetap aktif
+- Log: tidak ditemukan fatal exception, ANR aplikasi, atau `SQLiteException`
+- Status: smoke test instalasi/peluncuran lulus; alur koleksi favorit dan catatan menunggu verifikasi manual pemilik
+
 ## Catatan Rilis
 
 Belum ada perubahan aplikasi yang siap dirilis. Bagian ini akan diisi setelah implementasi dan verifikasi dimulai.
