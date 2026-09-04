@@ -102,18 +102,18 @@ Tujuan: memastikan tampilan nyaman, adaptif, dan dapat diakses.
 - [x] Menghapus pemaksaan `fontScale = 1`.
 - [x] Menambahkan dukungan ukuran teks pengguna.
 - [ ] Menambahkan pengaturan ukuran teks khusus isi doa jika disetujui.
-- [ ] Memeriksa kontras warna untuk mode terang dan gelap.
+- [x] Memeriksa kontras warna untuk mode terang dan gelap pada perangkat fisik.
 - [x] Menambahkan `contentDescription` pada elemen interaktif yang memerlukannya.
 - [x] Memastikan ukuran target sentuh memadai.
 - [x] Membuat baseline layout adaptif untuk ponsel dan layar `sw600dp`; verifikasi tablet/foldable masih terbuka.
 - [x] Meninjau kembali dan menghapus penguncian orientasi portrait.
-- [ ] Memastikan teks tidak terpotong saat font diperbesar.
+- [x] Memastikan teks tidak terpotong saat font diperbesar pada perangkat fisik.
 - [ ] Menguji dengan TalkBack.
 
 Kriteria selesai:
 
 - [x] Tampilan ponsel API 29 tidak tertutup system bar berdasarkan pemeriksaan visual.
-- [ ] Aplikasi dapat digunakan dengan ukuran font besar.
+- [x] Aplikasi dapat digunakan dengan ukuran font besar pada perangkat fisik.
 - [ ] Alur utama dapat digunakan dengan TalkBack.
 - [ ] Layout utama berfungsi pada ponsel dan layar besar.
 
@@ -478,6 +478,17 @@ Catatan/risiko tersisa:
 - Screenshot lokal: `.backups/phase2-physical-final.png`
 - Pengujian tersisa: rotasi, ukuran font besar, mode gelap, TalkBack, display cutout, multi-window, serta tablet/foldable
 - Status: implementasi awal selesai; Fase 2 belum ditutup sampai pengujian manual tersisa dilakukan
+
+### Entri 8 — Verifikasi Manual Fase 2 pada Ponsel
+
+- Tanggal: 4 September 2026
+- Penguji: pemilik aplikasi
+- Perangkat: Xiaomi Redmi Note 8 Pro, Android 10/API 29
+- Cakupan yang diminta: rotasi portrait/landscape, ukuran font sistem besar, mode gelap, alur utama, serta pemeriksaan system bar dan layout
+- Hasil: seluruh bagian yang dicoba berjalan normal dan tidak ditemukan masalah
+- Status: implementasi dan verifikasi Fase 2 pada ponsel selesai
+- Pengujian tambahan yang tetap terbuka: TalkBack, display cutout, multi-window, serta tablet/foldable
+- Catatan: pengaturan ukuran teks khusus isi doa belum dibuat karena merupakan fitur opsional yang memerlukan persetujuan tersendiri
 
 ## Catatan Rilis
 
