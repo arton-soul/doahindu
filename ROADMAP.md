@@ -270,7 +270,7 @@ Setiap kelompok fitur berikut memerlukan persetujuan terpisah.
 - [x] Menambahkan catatan pribadi pada doa.
 - [x] Memastikan koleksi dan catatan tetap tersedia setelah database konten diganti.
 - [x] Menambahkan instrumented test upgrade database pengguna versi 1 ke versi 2.
-- [ ] Memverifikasi seluruh alur koleksi dan catatan secara manual pada perangkat.
+- [x] Memverifikasi seluruh alur koleksi dan catatan secara manual pada perangkat.
 - [ ] Menambahkan ekspor/backup lokal jika disetujui.
 
 ### Bahasa dan teks
@@ -635,7 +635,8 @@ Catatan/risiko tersisa:
 - Build debug dan lint: berhasil; lint 0 error dan 55 warning
 - Perangkat: APK berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
 - Smoke test: aplikasi berhasil dibuka, proses aktif, dan tidak ditemukan crash, ANR, atau `SQLiteException`
-- Verifikasi tersisa: pemilik memeriksa keterbacaan teks saat mengetik nama koleksi dan catatan pada perangkat
+- Verifikasi pemilik: teks saat mengetik nama koleksi dan catatan sudah terbaca dengan baik; hasil dinyatakan normal
+- Status Fase 7A: implementasi dan verifikasi perangkat selesai untuk koleksi favorit dan catatan pribadi
 
 ## Catatan Rilis
 
