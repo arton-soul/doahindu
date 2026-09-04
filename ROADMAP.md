@@ -695,9 +695,10 @@ Catatan/risiko tersisa:
 - Penyimpanan: seluruh preferensi berada di SharedPreferences lokal `READING_PREFERENCES` dan bekerja offline
 - Build debug dan unit test: berhasil
 - Lint: berhasil dengan 0 error dan 55 warning
-- Instrumented test: 6 test lulus pada emulator Android 15/API 35, termasuk default/persistensi preferensi dan isolasi posisi baca
-- Perangkat fisik: APK berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro/Android 10 tanpa menghapus data; aplikasi aktif tanpa crash, ANR, atau `SQLiteException`
-- Pengujian tersisa: pemilik memverifikasi perubahan ukuran teks, jarak baris, tiga mode tema, keep-screen-on, dan pemulihan posisi baca secara manual
+- Instrumented test: 7 test lulus pada Redmi Note 8 Pro/Android 10 dan emulator Android 15/API 35, termasuk default/persistensi preferensi, isolasi posisi baca, dan konsistensi thumbnail kategori
+- Perangkat fisik: versi lama dihapus dengan persetujuan pemilik karena signature APK tidak cocok, lalu APK terbaru berhasil dipasang pada Redmi Note 8 Pro/Android 10; data lokal instalasi lama terhapus, aplikasi aktif tanpa crash, ANR, atau `SQLiteException`
+- Verifikasi manual: pemilik menyatakan label `Mode Baca` dan thumbnail yang seragam pada setiap kategori sudah sesuai
+- Status Fase 6A: implementasi, pengujian otomatis, dan verifikasi manual perangkat selesai
 
 ## Catatan Rilis
 
