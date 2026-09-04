@@ -557,7 +557,9 @@ Catatan/risiko tersisa:
 - Branch produksi: `main`
 - Endpoint manifest: `https://arton-soul.github.io/doahindu/manifest.json`
 - Perubahan: mengisi `CONTENT_MANIFEST_URL` dan menyesuaikan dokumentasi publikasi
-- Status upload dan GitHub Pages: akan dicatat setelah push dan workflow pertama diverifikasi
+- Upload: seluruh riwayat proyek berhasil diunggah ke branch `main`; remote lokal `origin` melacak `origin/main`
+- Verifikasi GitHub: repositori publik dengan default branch `main` dan workflow publikasi sudah dikenali GitHub
+- Status GitHub Pages: belum ada workflow run dan endpoint manifest belum terbit; pemilik perlu mengaktifkan Pages dengan sumber GitHub Actions, kemudian workflow dijalankan kembali
 
 ## Catatan Rilis
 
