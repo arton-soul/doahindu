@@ -316,8 +316,8 @@ Tujuan: memastikan integrasi eksternal aman dan mematuhi kebijakan distribusi.
 Kriteria selesai:
 
 - [ ] Alur consent sesuai wilayah dan kebijakan yang berlaku saat rilis.
-- [ ] Kebijakan privasi sesuai dengan perilaku aplikasi aktual.
-- [ ] Notifikasi dan iklan tidak mengganggu fungsi utama membaca.
+- [x] Kebijakan privasi sesuai dengan perilaku aplikasi aktual.
+- [x] Notifikasi dan iklan tidak mengganggu fungsi utama membaca berdasarkan verifikasi manual perangkat.
 - [x] Tidak ada credential rahasia yang dipublikasikan.
 
 ## Fase 9 — Pengujian dan Persiapan Rilis
@@ -718,7 +718,9 @@ Catatan/risiko tersisa:
 - Verifikasi otomatis: debug/unit test berhasil; lint 0 error dan 59 warning; build release dengan R8 berhasil; 8 instrumented test lulus pada Redmi Note 8 Pro/API 29 dan emulator/API 35
 - Perangkat fisik: APK debug dengan unit iklan demo berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro; aplikasi mencapai `MainActivity`, proses aktif, dan tidak ditemukan crash, `SecurityException`, atau ANR
 - Uji deep link: intent notifikasi simulasi dengan `topic_id=5` melewati `SplashActivity` dan berhasil membuka `StoriesActivity` pada perangkat fisik
-- Verifikasi tersisa: pengujian manual consent, iklan, notifikasi, dan deep link pada perangkat
+- Verifikasi manual: pemilik menguji consent/privasi iklan, opt-in notifikasi, kebijakan privasi, frekuensi interstitial, dan alur membaca pada perangkat; hasil dinyatakan baik
+- Status Fase 8A: implementasi teknis dan verifikasi perangkat selesai
+- Pekerjaan eksternal tersisa: mengaktifkan pesan consent di AdMob Privacy & messaging, menerbitkan kebijakan privasi pada URL publik, dan memperbarui Data Safety di Play Console
 
 ## Catatan Rilis
 
