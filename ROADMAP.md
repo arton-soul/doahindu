@@ -686,6 +686,7 @@ Catatan/risiko tersisa:
 - Tanggal: 5 September 2026
 - Persetujuan pemilik: Fase 6A disetujui
 - Pengaturan: menambahkan dialog `Mode Baca` pada halaman doa/cerita
+- Thumbnail daftar: seluruh item memakai gambar kategori yang sama; gambar asli doa tetap dipakai pada halaman detail
 - Ukuran teks: pilihan 14, 16, 18, 20, 22, dan 24 sp; default tetap 16 sp
 - Jarak baris: pilihan 1,0×, 1,25×, 1,5×, dan 1,75×; default tetap 1,0×
 - Tema: pilihan mengikuti sistem, terang, dan gelap; tema diterapkan secara global sejak `MyApplication`

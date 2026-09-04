@@ -134,6 +134,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cat_name;
     }
 
+    private byte[] getCategoryImage(SQLiteDatabase db, Integer catId) {
+        try (Cursor cursor = db.query(Constant.TBL_CATEGORY,
+                new String[]{Constant.TBL_CATEGORY_COLUMN_IMAGE},
+                Constant.TBL_CATEGORY_COLUMN_ID + " = ?",
+                new String[]{String.valueOf(catId)}, null, null, null, "1")) {
+            return cursor.moveToFirst() ? cursor.getBlob(0) : null;
+        }
+    }
+
+    private void applyCategoryThumbnail(TopicsModel topic, byte[] categoryImage) {
+        if (categoryImage != null && categoryImage.length > 0) {
+            topic.setThumbnail_image(categoryImage);
+        }
+    }
+
 
     public ArrayList<TopicsModel> getSearchTopics(Integer selected_cat_id, String searched_topic_name) {
         ArrayList<TopicsModel> list = new ArrayList<>();
@@ -143,6 +158,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + Constant.TBL_TOPIC_COLUMN_STORIES + " <> ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
+        byte[] categoryImage = getCategoryImage(db, selected_cat_id);
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(selected_cat_id),
                 "%" + searched_topic_name + "%", Constant.PLACEHOLDER_CONTENT});
 
@@ -157,6 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Boolean is_topic_fav = userDatabase.isFavorite(topic_id);
                 String last_viewed = null;
                 TopicsModel topicsModel = new TopicsModel(topic_id, topic_cat_id, topic_name, topic_image, topic_story, is_topic_fav, last_viewed);
+                applyCategoryThumbnail(topicsModel, categoryImage);
                 list.add(topicsModel);//adding 2nd column data
             } while (cursor.moveToNext());
         }
@@ -242,6 +259,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + Constant.TBL_TOPIC_COLUMN_STORIES + " <> ?";
 
         SQLiteDatabase db = this.getReadableDatabase();
+        byte[] categoryImage = getCategoryImage(db, cat_id);
         Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(cat_id),
                 Constant.PLACEHOLDER_CONTENT});
 
@@ -255,6 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Boolean is_topic_fav = userDatabase.isFavorite(topic_id);
                 String last_viewed = null;
                 TopicsModel topicsModel = new TopicsModel(topic_id, topic_cat_id, topic_name, topic_image, topic_story, is_topic_fav, last_viewed);
+                applyCategoryThumbnail(topicsModel, categoryImage);
                 list.add(topicsModel);
             } while (cursor.moveToNext());
         }
@@ -290,8 +309,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                      Constant.TBL_TOPIC_COLUMN_ID + " = ?",
                      new String[]{String.valueOf(topicId)}, null, null, null, "1")) {
             if (cursor.moveToFirst()) {
-                return new TopicsModel(cursor.getInt(0), cursor.getInt(1), cursor.getString(2),
-                        cursor.getBlob(3), cursor.getString(4), userDatabase.isFavorite(topicId), null);
+                TopicsModel topic = new TopicsModel(cursor.getInt(0), cursor.getInt(1),
+                        cursor.getString(2), cursor.getBlob(3), cursor.getString(4),
+                        userDatabase.isFavorite(topicId), null);
+                applyCategoryThumbnail(topic, getCategoryImage(db, topic.getCat_id()));
+                return topic;
             }
         }
         return null;

@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -31,6 +32,26 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    @Test
+    public void usesOneCategoryImageForEveryTopicThumbnail() throws Exception {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        context.deleteDatabase(Constant.DB_NAME);
+        DatabaseHelper database = new DatabaseHelper(context);
+        database.copyDataBase();
+        for (CategoryModel category : database.getAllCategories()) {
+            ArrayList<TopicsModel> topics = database.getAllTopicsByCategory(category.getCat_id());
+            if (category.getCat_image() != null && topics.size() > 1) {
+                for (TopicsModel topic : topics) {
+                    assertArrayEquals(category.getCat_image(), topic.getThumbnail_image());
+                }
+                database.close();
+                return;
+            }
+        }
+        database.close();
+        throw new AssertionError("No category with an image and multiple topics was found");
+    }
+
     @Test
     public void storesReadingPreferencesAndIndependentScrollPositions() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

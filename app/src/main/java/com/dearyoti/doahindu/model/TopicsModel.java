@@ -5,6 +5,7 @@ public class TopicsModel {
     private Integer topic_id, cat_id;
     private String topic_name, topic_story;
     private byte[] topic_image;
+    private byte[] thumbnail_image;
     private Boolean is_topic_fav;
     private String last_viewed;
 
@@ -14,6 +15,7 @@ public class TopicsModel {
         this.cat_id = cat_id;
         this.topic_name = topic_name;
         this.topic_image = topic_image;
+        this.thumbnail_image = topic_image;
         this.topic_story = topic_story;
         this.is_topic_fav = is_topic_fav;
         this.last_viewed = last_viewed;
@@ -49,6 +51,14 @@ public class TopicsModel {
 
     public void setTopic_image(byte[] topic_image) {
         this.topic_image = topic_image;
+    }
+
+    public byte[] getThumbnail_image() {
+        return thumbnail_image;
+    }
+
+    public void setThumbnail_image(byte[] thumbnail_image) {
+        this.thumbnail_image = thumbnail_image;
     }
 
     public String getTopic_story() {
