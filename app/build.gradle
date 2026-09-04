@@ -11,6 +11,7 @@ android {
         versionCode 12
         versionName "3.4.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "CONTENT_MANIFEST_URL", '""'
     }
     buildTypes {
         release {

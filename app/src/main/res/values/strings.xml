@@ -8,6 +8,7 @@
     <string name="menu_rate">Beri Rating</string>
     <string name="menu_share_app">Bagikan Aplikasi</string>
     <string name="menu_search">Cari</string>
+    <string name="menu_content_update">Perbarui Konten</string>
     <string name="more">Selengkapnya</string>
 
     <string name="action_share">Bagikan doa</string>
@@ -34,6 +35,14 @@
 
     <string name="title_activity_topic">Sub Bab</string>
     <string name="story_placeholder">Isi doa</string>
+
+    <string name="update_checking">Memeriksa pembaruan konten…</string>
+    <string name="update_complete">Konten berhasil diperbarui.</string>
+    <string name="update_current">Konten sudah versi terbaru.</string>
+    <string name="update_not_configured">Sumber pembaruan GitHub belum dikonfigurasi.</string>
+    <string name="update_app_required">Versi aplikasi yang lebih baru diperlukan untuk konten ini.</string>
+    <string name="update_invalid">Paket pembaruan tidak valid. Database lama tetap digunakan.</string>
+    <string name="update_network_error">Pembaruan belum dapat diunduh. Periksa koneksi internet.</string>
 
     <string name="admob_app_id">ca-app-pub-4098008677804088~1181209455</string>
     <string name="banner_ids">ca-app-pub-4098008677804088/2657942651</string>

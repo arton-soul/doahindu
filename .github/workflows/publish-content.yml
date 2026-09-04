@@ -1,0 +1,96 @@
+name: Publish prayer content
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+    paths:
+      - app/src/main/assets/doahindu1.sqlite
+      - .github/workflows/publish-content.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate database and create manifest
+        env:
+          CONTENT_VERSION: ${{ github.run_number }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import shutil
+          import sqlite3
+
+          source = pathlib.Path("app/src/main/assets/doahindu1.sqlite")
+          output = pathlib.Path("site")
+          output.mkdir()
+          version = int(os.environ["CONTENT_VERSION"])
+          package = output / f"content-v{version}.sqlite"
+          shutil.copy2(source, package)
+
+          connection = sqlite3.connect(package)
+          cursor = connection.cursor()
+          assert cursor.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+          required = {
+              "tbl_category": {"cat_id", "cat_name", "cat_image"},
+              "tbl_topics": {"topic_id", "cat_id", "topic_name", "topic_image", "topic_stories"},
+              "tbl_latest_story": {"topic_id", "topic_name", "topic_image", "topic_stories"},
+          }
+          for table, columns in required.items():
+              actual = {row[1] for row in cursor.execute(f"PRAGMA table_info({table})")}
+              assert columns <= actual, f"Missing columns in {table}: {columns - actual}"
+          duplicates = cursor.execute(
+              "SELECT COUNT(*) FROM (SELECT topic_id FROM tbl_topics GROUP BY topic_id HAVING COUNT(*) > 1)"
+          ).fetchone()[0]
+          orphans = cursor.execute(
+              "SELECT COUNT(*) FROM tbl_topics t LEFT JOIN tbl_category c ON c.cat_id=t.cat_id "
+              "WHERE c.cat_id IS NULL"
+          ).fetchone()[0]
+          assert duplicates == 0, "Duplicate topic_id values found"
+          assert orphans == 0, "Topics referencing missing categories found"
+          cursor.execute("PRAGMA user_version=1")
+          connection.commit()
+          connection.close()
+
+          digest = hashlib.sha256(package.read_bytes()).hexdigest()
+          owner, repository = os.environ["REPOSITORY"].split("/", 1)
+          manifest = {
+              "schemaVersion": 1,
+              "contentVersion": version,
+              "publishedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "minimumAppVersion": 12,
+              "databaseUrl": f"https://{owner}.github.io/{repository}/{package.name}",
+              "sha256": digest,
+              "sizeBytes": package.stat().st_size,
+          }
+          (output / "manifest.json").write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

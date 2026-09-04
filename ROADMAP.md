@@ -167,32 +167,32 @@ Import atau penggantian atomik
 Database konten offline aktif
 ```
 
-- [ ] Mendapatkan persetujuan untuk memulai Fase 4.
-- [ ] Memilih GitHub Pages atau GitHub Releases sebagai sumber resmi.
-- [ ] Menentukan apakah source konten menggunakan JSON, Markdown, atau SQLite.
-- [ ] Menentukan struktur `manifest.json`.
-- [ ] Menambahkan `schemaVersion`, `contentVersion`, `publishedAt`, dan `minimumAppVersion`.
-- [ ] Menyediakan URL paket konten berversi.
-- [ ] Menghasilkan dan memverifikasi checksum SHA-256.
-- [ ] Menentukan ukuran unduhan maksimum.
-- [ ] Mengunduh hanya melalui HTTPS.
-- [ ] Menyimpan unduhan ke file sementara.
-- [ ] Memvalidasi file SQLite atau paket konten sebelum digunakan.
-- [ ] Menerapkan penggantian/import data secara atomik.
-- [ ] Menyediakan rollback otomatis jika pembaruan gagal.
-- [ ] Menampilkan status pembaruan dengan bahasa yang mudah dipahami.
-- [ ] Mempertahankan database bawaan APK untuk penggunaan offline pertama.
-- [ ] Menambahkan pengaturan pemeriksaan pembaruan otomatis/manual.
-- [ ] Menambahkan GitHub Actions untuk validasi dan pembuatan paket konten jika disetujui.
+- [x] Mendapatkan persetujuan untuk memulai Fase 4.
+- [x] Memilih GitHub Pages sebagai sumber resmi.
+- [x] Menentukan SQLite sebagai source konten.
+- [x] Menentukan struktur `manifest.json`.
+- [x] Menambahkan `schemaVersion`, `contentVersion`, `publishedAt`, dan `minimumAppVersion`.
+- [x] Menyediakan pola URL paket konten berversi melalui workflow; URL publik menunggu repositori GitHub.
+- [x] Menghasilkan dan memverifikasi checksum SHA-256.
+- [x] Menentukan ukuran unduhan maksimum 25 MiB dan manifest maksimum 64 KiB.
+- [x] Mengunduh hanya melalui HTTPS.
+- [x] Menyimpan unduhan ke file sementara.
+- [x] Memvalidasi checksum, ukuran, integritas, versi skema, tabel/kolom, ID duplikat, dan relasi kategori SQLite sebelum digunakan.
+- [x] Menerapkan penggantian data secara atomik dengan file cadangan.
+- [x] Menyediakan rollback otomatis jika pembaruan gagal.
+- [x] Menampilkan status pembaruan dengan bahasa yang mudah dipahami.
+- [x] Mempertahankan database bawaan APK untuk penggunaan offline pertama.
+- [x] Menambahkan pemeriksaan otomatis harian dan pemeriksaan manual melalui menu.
+- [x] Menambahkan GitHub Actions untuk validasi dan publikasi paket konten ke GitHub Pages.
 - [ ] Menguji pembaruan normal, gagal unduh, checksum salah, skema salah, dan rollback.
 
 Kriteria selesai:
 
 - [ ] Konten dapat diperbarui tanpa update APK.
-- [ ] Aplikasi tetap dapat dibuka tanpa internet.
-- [ ] Paket rusak atau tidak sah tidak pernah menggantikan database aktif.
-- [ ] Favorit, riwayat, dan pengaturan pengguna tetap utuh.
-- [ ] Versi database sebelumnya dapat dipulihkan jika pembaruan gagal.
+- [x] Aplikasi tetap dapat dibuka tanpa internet.
+- [x] Paket rusak atau tidak sah tidak pernah menggantikan database aktif berdasarkan instrumented test.
+- [x] Favorit, riwayat, dan pengaturan pengguna tetap utuh berdasarkan pemisahan database dan instrumented test.
+- [x] Versi database sebelumnya dapat dipulihkan jika pembaruan gagal berdasarkan instrumented test.
 
 ## Fase 5 — Perbaikan Konten
 
@@ -531,6 +531,23 @@ Catatan/risiko tersisa:
 - Catatan lingkungan: emulator sempat tidak responsif dan harus dihidupkan ulang; test final setelah restart lulus
 - Status: seluruh pekerjaan teknis dan kriteria otomatis Fase 3 selesai
 - Verifikasi rilis yang tetap diperlukan: upgrade pada aplikasi produksi harus menggunakan signing key yang sama agar migrasi data pengguna nyata dapat diuji tanpa uninstall
+
+### Entri 11 — Fondasi Sistem Pembaruan Konten dari GitHub
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: Fase 4 disetujui
+- Arsitektur: GitHub Pages menyajikan `manifest.json` dan database SQLite berversi; database bawaan APK tetap menjadi fallback offline
+- Aplikasi: menambahkan pemeriksaan otomatis harian dan pemeriksaan manual dari menu navigasi
+- Keamanan unduhan: hanya HTTPS, redirect diperiksa, timeout jaringan diterapkan, manifest dibatasi 64 KiB, dan database dibatasi 25 MiB
+- Validasi paket: ukuran dan SHA-256 harus cocok; SQLite harus lulus `integrity_check`, `user_version`, kontrak tabel/kolom, pemeriksaan ID duplikat, dan relasi kategori
+- Aktivasi: database baru diunduh ke file sementara, database aktif dipindah ke backup, dan rollback dijalankan jika aktivasi gagal
+- Data pengguna: favorit dan riwayat tetap berada di `doahindu_user.sqlite`, sehingga penggantian database konten tidak menimpanya
+- Otomasi: menambahkan workflow GitHub Actions untuk memvalidasi source SQLite, membuat artefak berversi dan manifest, lalu menerbitkannya ke GitHub Pages
+- Dokumentasi: menambahkan petunjuk pembaruan konten dan konfigurasi endpoint pada `content/README.md`
+- Build debug, unit test, dan lint: berhasil; lint menghasilkan 0 error dan 52 warning
+- Instrumented test: 3 test lulus pada emulator Android 15/API 35, termasuk migrasi Fase 3, validasi database/checksum/schema, aktivasi, backup/rollback, preservasi favorit, endpoint kosong, dan penolakan HTTP
+- Status: fondasi lokal selesai dan tervalidasi; endpoint produksi masih kosong sehingga aplikasi aman menampilkan status belum dikonfigurasi
+- Pekerjaan tersisa: menyediakan repositori GitHub dan URL Pages, mengisi `CONTENT_MANIFEST_URL`, menjalankan workflow pertama, lalu menguji unduhan nyata dan pembaruan tanpa APK
 
 ## Catatan Rilis
 

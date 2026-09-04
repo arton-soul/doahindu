@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.activity.OnBackPressedCallback;
@@ -42,6 +43,7 @@ import com.dearyoti.doahindu.fragment.PolicyFragment;
 import com.dearyoti.doahindu.fragment.RecentFragment;
 import com.dearyoti.doahindu.utils.Constant;
 import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
+import com.dearyoti.doahindu.update.ContentUpdateManager;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
@@ -168,6 +170,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_item_share:
                 shareApp();
                 return true;
+            case R.id.nav_item_content_update:
+                checkContentUpdate(true);
+                return true;
 
             case R.id.nav_item_privacy:
                 drawerLayout.closeDrawers();
@@ -241,12 +246,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!isFinishing() && !isDestroyed()) {
                 homeFragment = new HomeFragment();
                 setDefaultFragment(homeFragment);
+                checkContentUpdate(false);
             }
         }, error -> {
             Log.e("Database", "Unable to initialize database", error);
             if (!isFinishing() && !isDestroyed()) {
                 homeFragment = new HomeFragment();
                 setDefaultFragment(homeFragment);
+            }
+        });
+    }
+
+    private void checkContentUpdate(boolean manual) {
+        if (manual) {
+            Toast.makeText(this, R.string.update_checking, Toast.LENGTH_SHORT).show();
+        }
+        new ContentUpdateManager(this).checkForUpdate(manual, result -> {
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+            switch (result) {
+                case UPDATED:
+                    Toast.makeText(this, R.string.update_complete, Toast.LENGTH_LONG).show();
+                    db.close();
+                    recreate();
+                    break;
+                case ALREADY_CURRENT:
+                    if (manual) {
+                        Toast.makeText(this, R.string.update_current, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case CONFIGURATION_REQUIRED:
+                    if (manual) {
+                        Toast.makeText(this, R.string.update_not_configured, Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case INCOMPATIBLE_APP:
+                    Toast.makeText(this, R.string.update_app_required, Toast.LENGTH_LONG).show();
+                    break;
+                case INVALID_PACKAGE:
+                    Toast.makeText(this, R.string.update_invalid, Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    if (manual) {
+                        Toast.makeText(this, R.string.update_network_error, Toast.LENGTH_LONG).show();
+                    }
+                    break;
             }
         });
     }
