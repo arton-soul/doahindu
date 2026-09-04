@@ -89,7 +89,7 @@ Kriteria selesai:
 
 - [x] Debug dan release build berhasil.
 - [ ] Aplikasi berjalan pada versi Android minimum dan terbaru yang disepakati.
-- [ ] Tidak ada crash pada alur utama.
+- [x] Tidak ada crash pada alur utama setelah pembaruan API 36 berdasarkan pengujian manual perangkat fisik.
 - [x] Target API memenuhi persyaratan Google Play yang berlaku saat pemeriksaan Fase 1.
 
 ## Fase 2 — UI, Edge-to-Edge, dan Aksesibilitas
@@ -445,6 +445,17 @@ Catatan/risiko tersisa:
 - Peringatan tersisa: command-line tools Android lebih lama daripada format metadata SDK, beberapa API Java lama/deprecated masih digunakan, dan Gradle masih melaporkan fitur deprecated
 - Pengujian tersisa: alur utama setelah pembaruan perlu diverifikasi manual; perubahan perilaku khusus Android 16 perlu diuji pada emulator/perangkat API 36
 - Referensi: Android 16 SDK `https://developer.android.com/about/versions/16/setup-sdk`, persyaratan target API `https://developer.android.com/google/play/requirements/target-sdk`, Firebase release notes `https://firebase.google.com/support/release-notes/android`, dan Mobile Ads release notes `https://developers.google.com/admob/android/rel-notes`
+
+### Entri 6 — Verifikasi Manual Fase 1
+
+- Tanggal: 4 September 2026
+- Penguji: pemilik aplikasi
+- Perangkat: Xiaomi Redmi Note 8 Pro, Android 10/API 29
+- Build: debug dengan `compileSdk 36` dan `targetSdk 36`
+- Cakupan: seluruh alur utama aplikasi setelah pembaruan SDK dan dependency
+- Hasil: seluruh fungsi yang diuji berjalan normal dan tidak ditemukan masalah
+- Status: verifikasi fungsional Fase 1 pada API 29 selesai
+- Catatan: system image/emulator API 36 belum tersedia di lingkungan lokal, sehingga item pengujian perilaku khusus Android 16 tetap terbuka dan tidak dicentang
 
 ## Catatan Rilis
 
