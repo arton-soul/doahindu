@@ -635,8 +635,8 @@ Catatan/risiko tersisa:
 - Build debug dan lint: berhasil; lint 0 error dan 55 warning
 - Perangkat: APK berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
 - Smoke test: aplikasi berhasil dibuka, proses aktif, dan tidak ditemukan crash, ANR, atau `SQLiteException`
-- Verifikasi pemilik: teks saat mengetik nama koleksi dan catatan sudah terbaca dengan baik; hasil dinyatakan normal
-- Status Fase 7A: implementasi dan verifikasi perangkat selesai untuk koleksi favorit dan catatan pribadi
+- Verifikasi tersisa: pemilik memeriksa keterbacaan teks saat mengetik nama koleksi dan catatan pada perangkat
+- Status Fase 7A: implementasi serta pengujian otomatis selesai; verifikasi visual manual masih menunggu konfirmasi pemilik
 
 ## Catatan Rilis
 
