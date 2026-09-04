@@ -1,6 +1,7 @@
 package com.dearyoti.doahindu.update;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -76,7 +77,11 @@ public class ContentUpdateManagerInstrumentedTest {
         assertFalse(updater.hasExpectedChecksum(candidate,
                 "0000000000000000000000000000000000000000000000000000000000000000"));
 
+        DatabaseHelper openHelper = new DatabaseHelper(context);
+        SQLiteDatabase openConnection = openHelper.getReadableDatabase();
+        assertTrue(openConnection.isOpen());
         assertTrue(updater.replaceAtomically(candidate));
+        assertFalse(openConnection.isOpen());
         assertTrue(context.getDatabasePath(Constant.DB_NAME + ".backup").exists());
         DatabaseHelper replacedDatabase = new DatabaseHelper(context);
         assertTrue(replacedDatabase.isFavorite(favoriteId));

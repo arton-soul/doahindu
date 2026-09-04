@@ -576,6 +576,21 @@ Catatan/risiko tersisa:
 - Catatan teknis: log SQLite mencatat `file renamed while open` ketika aktivasi; relaunch berhasil, tetapi koneksi database perlu ditutup secara eksplisit sebelum penggantian pada perbaikan berikutnya
 - Status Fase 4: seluruh fungsi dan kriteria utama selesai; perbaikan warning koneksi terbuka direkomendasikan sebelum rilis produksi
 
+### Entri 14 — Perbaikan Koneksi Terbuka saat Aktivasi Konten
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: perbaikan warning aktivasi Fase 4 dilanjutkan
+- Akar masalah: `MainActivity` hanya menutup helper miliknya setelah replacement, sedangkan helper milik fragment/adapter masih dapat menahan koneksi database konten
+- Perbaikan: seluruh instance `DatabaseHelper` diregistrasikan secara lemah dan ditutup sebelum file database aktif diganti
+- Sidecar SQLite: file journal, WAL, dan SHM milik database konten aktif/cadangan dibersihkan setelah koneksi ditutup dan sebelum replacement
+- Test tambahan: instrumented test membuka koneksi konten, menjalankan replacement, lalu memastikan koneksi lama sudah tertutup
+- Build debug dan unit test: berhasil
+- Lint: berhasil dengan 0 error dan 52 warning
+- Instrumented test: 3 test lulus pada emulator Android 15/API 35
+- Uji regresi internet: `contentVersion 2` kembali berhasil terpasang, file backup terbentuk, dan database pengguna tetap tersedia
+- Log regresi: tidak ditemukan lagi `file renamed while open`, `SQLiteException`, atau fatal exception
+- Status: warning koneksi terbuka Fase 4 selesai diperbaiki dan tervalidasi
+
 ## Catatan Rilis
 
 Belum ada perubahan aplikasi yang siap dirilis. Bagian ini akan diisi setelah implementasi dan verifikasi dimulai.

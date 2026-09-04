@@ -18,8 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import static com.dearyoti.doahindu.utils.Constant.DB_NAME;
 
@@ -29,6 +32,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // of your application database.
     private static final String MIGRATION_PREFS = "DATABASE_MIGRATIONS";
     private static final String MIGRATION_USER_STATE_V1 = "user_state_v1";
+    private static final Set<DatabaseHelper> OPEN_HELPERS = Collections.newSetFromMap(
+            new WeakHashMap<>());
     private final Context myContext;
     private final UserDatabaseHelper userDatabase;
 
@@ -36,6 +41,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, 1);
         this.myContext = context.getApplicationContext();
         this.userDatabase = new UserDatabaseHelper(this.myContext);
+        synchronized (OPEN_HELPERS) {
+            OPEN_HELPERS.add(this);
+        }
     }
 
     @Override
@@ -91,8 +99,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
-        super.close();
-        userDatabase.close();
+        try {
+            super.close();
+            userDatabase.close();
+        } finally {
+            synchronized (OPEN_HELPERS) {
+                OPEN_HELPERS.remove(this);
+            }
+        }
+    }
+
+    /** Closes every helper that may hold the replaceable content database open. */
+    public static void closeAllInstances() {
+        DatabaseHelper[] helpers;
+        synchronized (OPEN_HELPERS) {
+            helpers = OPEN_HELPERS.toArray(new DatabaseHelper[0]);
+        }
+        for (DatabaseHelper helper : helpers) {
+            helper.close();
+        }
     }
 
     public String getCategoryName(Integer cat_id) {

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.dearyoti.doahindu.BuildConfig;
+import com.dearyoti.doahindu.database.DatabaseHelper;
 import com.dearyoti.doahindu.utils.Constant;
 import com.google.gson.Gson;
 
@@ -302,6 +303,9 @@ public final class ContentUpdateManager {
     synchronized boolean replaceAtomically(File downloadedDatabase) {
         File activeDatabase = context.getDatabasePath(Constant.DB_NAME);
         File backupDatabase = context.getDatabasePath(Constant.DB_NAME + ".backup");
+        DatabaseHelper.closeAllInstances();
+        deleteSidecarFiles(activeDatabase);
+        deleteSidecarFiles(backupDatabase);
         if (backupDatabase.exists() && !backupDatabase.delete()) {
             return false;
         }
@@ -316,5 +320,11 @@ public final class ContentUpdateManager {
         }
         backupDatabase.renameTo(activeDatabase);
         return false;
+    }
+
+    private void deleteSidecarFiles(File database) {
+        new File(database.getPath() + "-journal").delete();
+        new File(database.getPath() + "-wal").delete();
+        new File(database.getPath() + "-shm").delete();
     }
 }
