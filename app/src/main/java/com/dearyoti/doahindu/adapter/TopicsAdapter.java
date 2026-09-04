@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.activity.StoriesActivity;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,7 +31,6 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     private ArrayList<TopicsModel> topicsList;
     private DatabaseHelper db;
     private itemInterface itemInter;
-    private Integer selectedTopicId;
     private Boolean isFavorite;
 
     public TopicsAdapter(Context context, ArrayList<TopicsModel> topicsList, Boolean isFavorite, itemInterface itemInterface) {
@@ -38,6 +38,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         this.topicsList = topicsList;
         this.isFavorite = isFavorite;
         this.itemInter = itemInterface;
+        this.db = new DatabaseHelper(context.getApplicationContext());
     }
 
     public void updateList(ArrayList<TopicsModel> list) {
@@ -49,7 +50,6 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     @Override
     public TopicsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item, parent, false);
-        db = new DatabaseHelper(context);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -66,7 +66,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         }
         holder.txtTopicName.setText("" + topicsModel.getTopic_name());
 
-        isFavorite(holder, topicsModel.getTopic_id());
+        showFavorite(holder, Boolean.TRUE.equals(topicsModel.getIs_topic_fav()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,26 +80,28 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         holder.imgTopicBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedTopicId = topicsModel.getTopic_id();
-                if (db.isFavorite(selectedTopicId)) {
-                    if (db.updateFavorite(selectedTopicId, 0)) {
-                        Snackbar.make(view, "Story removed from favorite.", Snackbar.LENGTH_LONG).show();
-                        if (isFavorite) {
-                            itemInter.itemRemove();
-                        }
+                int topicId = topicsModel.getTopic_id();
+                boolean newFavoriteState = !Boolean.TRUE.equals(topicsModel.getIs_topic_fav());
+                DatabaseExecutor.execute(() -> db.updateFavorite(topicId, newFavoriteState ? 1 : 0), updated -> {
+                    if (!updated) {
+                        return;
                     }
-                } else {
-                    if (db.updateFavorite(selectedTopicId, 1)) {
-                        Snackbar.make(view, "Story added to favorite.", Snackbar.LENGTH_LONG).show();
+                    topicsModel.setIs_topic_fav(newFavoriteState);
+                    showFavorite(holder, newFavoriteState);
+                    Snackbar.make(view, newFavoriteState
+                            ? "Story added to favorite." : "Story removed from favorite.",
+                            Snackbar.LENGTH_LONG).show();
+                    if (!newFavoriteState && isFavorite) {
+                        itemInter.itemRemove();
                     }
-                }
-                isFavorite(holder, selectedTopicId);
+                }, error -> Snackbar.make(view, "Unable to update favorite.",
+                        Snackbar.LENGTH_LONG).show());
             }
         });
     }
 
-    private void isFavorite(ViewHolder holder, int topicId) {
-        if (db.isFavorite(topicId)) {
+    private void showFavorite(ViewHolder holder, boolean favorite) {
+        if (favorite) {
             holder.imgTopicBookmark.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.favorite_select));
             holder.imgTopicBookmark.setContentDescription(
                     context.getString(R.string.action_remove_favorite));

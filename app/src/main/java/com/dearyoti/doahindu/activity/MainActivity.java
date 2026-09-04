@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.fragment.AboutUsFragment;
 import com.dearyoti.doahindu.fragment.CategoryFragment;
 import com.dearyoti.doahindu.fragment.FavoriteFragment;
@@ -131,9 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
-        // set default fragment
-        homeFragment = new HomeFragment();
-        setDefaultFragment(homeFragment);
     }
 
     @Override
@@ -236,11 +234,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void insertData() {
-        try {
+        DatabaseExecutor.execute(() -> {
             db.copyDataBase();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            return true;
+        }, ignored -> {
+            if (!isFinishing() && !isDestroyed()) {
+                homeFragment = new HomeFragment();
+                setDefaultFragment(homeFragment);
+            }
+        }, error -> {
+            Log.e("Database", "Unable to initialize database", error);
+            if (!isFinishing() && !isDestroyed()) {
+                homeFragment = new HomeFragment();
+                setDefaultFragment(homeFragment);
+            }
+        });
     }
 
     private void loadFrag(Fragment f1, String name, FragmentManager fm) {

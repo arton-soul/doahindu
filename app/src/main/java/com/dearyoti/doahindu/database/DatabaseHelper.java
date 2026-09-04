@@ -89,10 +89,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
     }
 
+    @Override
+    public synchronized void close() {
+        super.close();
+        userDatabase.close();
+    }
+
     public String getCategoryName(Integer cat_id) {
         String cat_name = "";
-        try (SQLiteDatabase db = this.getReadableDatabase();
-             Cursor cursor = db.query(Constant.TBL_CATEGORY,
+        SQLiteDatabase db = this.getReadableDatabase();
+        try (Cursor cursor = db.query(Constant.TBL_CATEGORY,
                      new String[]{Constant.TBL_CATEGORY_COLUMN_NAME},
                      Constant.TBL_CATEGORY_COLUMN_ID + " = ?",
                      new String[]{String.valueOf(cat_id)}, null, null, null, "1")) {
@@ -130,7 +136,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         // closing connection
         cursor.close();
-        db.close();
         return list;
     }
 
@@ -188,7 +193,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return list;
     }
 
@@ -214,7 +218,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return list;
     }
 
@@ -237,13 +240,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return list;
     }
 
     public TopicsModel getTopicById(Integer topicId) {
-        try (SQLiteDatabase db = getReadableDatabase();
-             Cursor cursor = db.query(Constant.TBL_TOPICS, null,
+        SQLiteDatabase db = getReadableDatabase();
+        try (Cursor cursor = db.query(Constant.TBL_TOPICS, null,
                      Constant.TBL_TOPIC_COLUMN_ID + " = ?",
                      new String[]{String.valueOf(topicId)}, null, null, null, "1")) {
             if (cursor.moveToFirst()) {
@@ -255,8 +257,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public LatestStoryModel getLatestStoryById(Integer topicId) {
-        try (SQLiteDatabase db = getReadableDatabase();
-             Cursor cursor = db.query(Constant.TBL_LATEST, null,
+        SQLiteDatabase db = getReadableDatabase();
+        try (Cursor cursor = db.query(Constant.TBL_LATEST, null,
                      Constant.TBL_TOPIC_COLUMN_ID + " = ?",
                      new String[]{String.valueOf(topicId)}, null, null, null, "1")) {
             if (cursor.moveToFirst()) {

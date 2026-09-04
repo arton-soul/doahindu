@@ -1,14 +1,26 @@
 package com.dearyoti.doahindu;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.model.CategoryModel;
+import com.dearyoti.doahindu.model.TopicsModel;
+import com.dearyoti.doahindu.utils.Constant;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -18,9 +30,57 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     @Test
-    public void useAppContext() {
-        // Context of the app under test.
+    public void migratesLegacyStateAndKeepsItWhenContentIsReplaced() throws Exception {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.storybook.storybook", appContext.getPackageName());
+        appContext.deleteDatabase(Constant.DB_NAME);
+        appContext.deleteDatabase("doahindu_user.sqlite");
+        appContext.getSharedPreferences("DATABASE_MIGRATIONS", Context.MODE_PRIVATE)
+                .edit().clear().commit();
+
+        DatabaseHelper initialDatabase = new DatabaseHelper(appContext);
+        initialDatabase.copyDataBase();
+        ArrayList<CategoryModel> categories = initialDatabase.getAllCategories();
+        assertFalse(categories.isEmpty());
+        ArrayList<TopicsModel> topics = initialDatabase
+                .getAllTopicsByCategory(categories.get(0).getCat_id());
+        assertFalse(topics.isEmpty());
+        int topicId = topics.get(0).getTopic_id();
+        initialDatabase.close();
+
+        ContentValues legacyState = new ContentValues();
+        legacyState.put(Constant.TBL_TOPIC_COLUMN_ISFAVORITE, 1);
+        legacyState.put(Constant.TBL_TOPIC_COLUMN_LASTVIEWED, "2026-09-04 12:00:00");
+        try (SQLiteDatabase legacyDatabase = SQLiteDatabase.openDatabase(
+                appContext.getDatabasePath(Constant.DB_NAME).getPath(), null,
+                SQLiteDatabase.OPEN_READWRITE)) {
+            assertEquals(1, legacyDatabase.update(Constant.TBL_TOPICS, legacyState,
+                    Constant.TBL_TOPIC_COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(topicId)}));
+        }
+
+        appContext.deleteDatabase("doahindu_user.sqlite");
+        appContext.getSharedPreferences("DATABASE_MIGRATIONS", Context.MODE_PRIVATE)
+                .edit().clear().commit();
+        DatabaseHelper migratedDatabase = new DatabaseHelper(appContext);
+        migratedDatabase.copyDataBase();
+
+        try (Cursor foreignKeys = migratedDatabase.getReadableDatabase()
+                .rawQuery("PRAGMA foreign_keys", null)) {
+            assertTrue(foreignKeys.moveToFirst());
+            assertEquals(1, foreignKeys.getInt(0));
+        }
+        assertTrue(migratedDatabase.isFavorite(topicId));
+        assertEquals(topicId, migratedDatabase.getRecentViewed().get(0).getTopic_id().intValue());
+        assertTrue(migratedDatabase.getSearchTopics(categories.get(0).getCat_id(),
+                "%' OR 1=1 --").isEmpty());
+        migratedDatabase.close();
+
+        assertTrue(appContext.deleteDatabase(Constant.DB_NAME));
+        DatabaseHelper replacedContentDatabase = new DatabaseHelper(appContext);
+        replacedContentDatabase.copyDataBase();
+        assertTrue(replacedContentDatabase.isFavorite(topicId));
+        assertEquals(topicId,
+                replacedContentDatabase.getRecentViewed().get(0).getTopic_id().intValue());
+        replacedContentDatabase.close();
     }
 }

@@ -14,6 +14,7 @@ import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.activity.MainActivity;
 import com.dearyoti.doahindu.adapter.CategoryAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.model.CategoryModel;
 
 import java.util.ArrayList;
@@ -59,16 +60,26 @@ public class CategoryFragment extends Fragment {
 
         recyclerCategoryView.setLayoutManager(gridLayoutManager);
 
-        categoryList = db.getAllCategories();
-        if (categoryList.size() > 0) {
-            categoryAdapter = new CategoryAdapter(getContext(), categoryList);
-            recyclerCategoryView.setAdapter(categoryAdapter);
-            recyclerCategoryView.setVisibility(View.VISIBLE);
-            txtNoData.setVisibility(View.GONE);
-        } else {
-            recyclerCategoryView.setVisibility(View.GONE);
-            txtNoData.setVisibility(View.VISIBLE);
-        }
+        DatabaseExecutor.execute(db::getAllCategories, result -> {
+            if (!isAdded()) {
+                return;
+            }
+            categoryList = result;
+            if (!categoryList.isEmpty()) {
+                categoryAdapter = new CategoryAdapter(requireContext(), categoryList);
+                recyclerCategoryView.setAdapter(categoryAdapter);
+                recyclerCategoryView.setVisibility(View.VISIBLE);
+                txtNoData.setVisibility(View.GONE);
+            } else {
+                recyclerCategoryView.setVisibility(View.GONE);
+                txtNoData.setVisibility(View.VISIBLE);
+            }
+        }, error -> {
+            if (isAdded()) {
+                recyclerCategoryView.setVisibility(View.GONE);
+                txtNoData.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     public void filter(String text) {

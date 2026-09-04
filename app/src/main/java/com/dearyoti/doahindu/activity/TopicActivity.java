@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.utils.EdgeToEdgeHelper;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
@@ -50,7 +51,7 @@ public class TopicActivity extends AppCompatActivity implements TopicsAdapter.it
 
         getIntentData();
         init();
-        setAdapter();
+        loadTopics();
         bannerLoad();
     }
 
@@ -77,7 +78,6 @@ public class TopicActivity extends AppCompatActivity implements TopicsAdapter.it
         toolbarTopicTitle.setTypeface(font);
 
 
-        topicsList = db.getAllTopicsByCategory(selectedCatId);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerTopics.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
@@ -104,8 +104,28 @@ public class TopicActivity extends AppCompatActivity implements TopicsAdapter.it
     }
 
     private void searchTopic(Integer cat_id, String topic_name) {
-        topicsList = db.getSearchTopics(cat_id, topic_name);
-        setAdapter();
+        DatabaseExecutor.execute(() -> db.getSearchTopics(cat_id, topic_name), result -> {
+            if (!isFinishing() && !isDestroyed()) {
+                topicsList = result;
+                setAdapter();
+            }
+        }, error -> showNoData());
+    }
+
+    private void loadTopics() {
+        DatabaseExecutor.execute(() -> db.getAllTopicsByCategory(selectedCatId), result -> {
+            if (!isFinishing() && !isDestroyed()) {
+                topicsList = result;
+                setAdapter();
+            }
+        }, error -> showNoData());
+    }
+
+    private void showNoData() {
+        if (!isFinishing() && !isDestroyed()) {
+            recyclerTopics.setVisibility(View.GONE);
+            txtNoData.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -174,8 +194,7 @@ public class TopicActivity extends AppCompatActivity implements TopicsAdapter.it
         }
 
         if (topicsList != null) {
-            topicsList = db.getAllTopicsByCategory(selectedCatId);
-            setAdapter();
+            loadTopics();
         }
         if (searchView != null) {
             searchView.setQuery("", false);

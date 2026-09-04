@@ -14,6 +14,7 @@ import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.activity.MainActivity;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.model.TopicsModel;
 
 import java.util.ArrayList;
@@ -70,10 +71,13 @@ public class FavoriteFragment extends Fragment implements TopicsAdapter.itemInte
     }
 
     private void setAdapter() {
-        topicsList = db.getFavoriteTopics();
-        if (topicsList != null) {
-            if (topicsList.size() > 0) {
-                adapter = new TopicsAdapter(getContext(), topicsList, true, this::itemRemove);
+        DatabaseExecutor.execute(db::getFavoriteTopics, result -> {
+            if (!isAdded()) {
+                return;
+            }
+            topicsList = result;
+            if (!topicsList.isEmpty()) {
+                adapter = new TopicsAdapter(requireContext(), topicsList, true, this::itemRemove);
                 recyclerFavorite.setAdapter(adapter);
                 recyclerFavorite.setVisibility(View.VISIBLE);
                 txtNoData.setVisibility(View.GONE);
@@ -81,7 +85,11 @@ public class FavoriteFragment extends Fragment implements TopicsAdapter.itemInte
                 recyclerFavorite.setVisibility(View.GONE);
                 txtNoData.setVisibility(View.VISIBLE);
             }
-        } else {
+        }, error -> showNoData());
+    }
+
+    private void showNoData() {
+        if (isAdded()) {
             recyclerFavorite.setVisibility(View.GONE);
             txtNoData.setVisibility(View.VISIBLE);
         }
@@ -105,16 +113,6 @@ public class FavoriteFragment extends Fragment implements TopicsAdapter.itemInte
 
     @Override
     public void itemRemove() {
-        topicsList = db.getFavoriteTopics();
-        if (topicsList != null) {
-            recyclerFavorite.setAdapter(new TopicsAdapter(getContext(), topicsList, true, this::itemRemove));
-            if (topicsList.isEmpty()) {
-                txtNoData.setVisibility(View.VISIBLE);
-            } else {
-                txtNoData.setVisibility(View.GONE);
-            }
-        } else {
-            txtNoData.setVisibility(View.GONE);
-        }
+        setAdapter();
     }
 }

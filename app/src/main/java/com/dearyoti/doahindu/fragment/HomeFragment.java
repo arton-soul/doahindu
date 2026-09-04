@@ -21,6 +21,7 @@ import com.dearyoti.doahindu.adapter.HomeCategoryAdapter;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
 import com.dearyoti.doahindu.adapter.ViewPagerAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.model.CategoryModel;
 import com.dearyoti.doahindu.model.LatestStoryModel;
 import com.dearyoti.doahindu.model.TopicsModel;
@@ -80,6 +81,8 @@ public class HomeFragment extends
     public void init() {
         categoryList = new ArrayList<>();
         recentList = new ArrayList<>();
+        homeCatList = new ArrayList<>();
+        limitRecent = new ArrayList<>();
         mPager = view.findViewById(R.id.view_pager);
         circlePageIndicator = view.findViewById(R.id.indicator);
         recyclerCategoryView = view.findViewById(R.id.category_recycler);
@@ -109,11 +112,20 @@ public class HomeFragment extends
     }
 
     public void setViewPager() {
-        latestStoryList = db.getLatestStory();
-        viewPagerAdapter = new ViewPagerAdapter(getContext(), latestStoryList);
-        mPager.setAdapter(viewPagerAdapter);
-        circlePageIndicator.setViewPager(mPager);
-        playViewPager(mPager);
+        DatabaseExecutor.execute(db::getLatestStory, result -> {
+            if (!isAdded()) {
+                return;
+            }
+            latestStoryList = result;
+            viewPagerAdapter = new ViewPagerAdapter(requireContext(), latestStoryList);
+            mPager.setAdapter(viewPagerAdapter);
+            circlePageIndicator.setViewPager(mPager);
+            playViewPager(mPager);
+        }, error -> {
+            if (isAdded()) {
+                relativeBanner.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void setRecentAdapter() {
@@ -121,22 +133,34 @@ public class HomeFragment extends
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerRecentView.setLayoutManager(linearLayoutManager);
-        recentList = db.getRecentViewed();
-        limitRecent = new ArrayList<>();
-        if (recentList.size() > 0 && recentList.get(0).getLast_viewed() != null && !recentList.get(0).getLast_viewed().isEmpty()) {
-            for (int i = 0; i < Math.min(3, recentList.size()); i++) {
-                if (recentList.get(i).getLast_viewed() != null && !recentList.get(i).getLast_viewed().isEmpty()) {
-                    limitRecent.add(recentList.get(i));
-                }
+        DatabaseExecutor.execute(db::getRecentViewed, result -> {
+            if (!isAdded()) {
+                return;
             }
-            topicsAdapter = new TopicsAdapter(getContext(), limitRecent, false, this::itemRemove);
-            recyclerRecentView.setAdapter(topicsAdapter);
-            recyclerRecentView.setVisibility(View.VISIBLE);
-            layoutRecent.setVisibility(View.VISIBLE);
-        } else {
-            recyclerRecentView.setVisibility(View.GONE);
-            layoutRecent.setVisibility(View.GONE);
-        }
+            recentList = result;
+            limitRecent = new ArrayList<>();
+            if (!recentList.isEmpty() && recentList.get(0).getLast_viewed() != null
+                    && !recentList.get(0).getLast_viewed().isEmpty()) {
+                for (int i = 0; i < Math.min(3, recentList.size()); i++) {
+                    if (recentList.get(i).getLast_viewed() != null
+                            && !recentList.get(i).getLast_viewed().isEmpty()) {
+                        limitRecent.add(recentList.get(i));
+                    }
+                }
+                topicsAdapter = new TopicsAdapter(requireContext(), limitRecent, false, this::itemRemove);
+                recyclerRecentView.setAdapter(topicsAdapter);
+                recyclerRecentView.setVisibility(View.VISIBLE);
+                layoutRecent.setVisibility(View.VISIBLE);
+            } else {
+                recyclerRecentView.setVisibility(View.GONE);
+                layoutRecent.setVisibility(View.GONE);
+            }
+        }, error -> {
+            if (isAdded()) {
+                recyclerRecentView.setVisibility(View.GONE);
+                layoutRecent.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void setAdapter() {
@@ -148,13 +172,21 @@ public class HomeFragment extends
             }
         };
         recyclerCategoryView.setLayoutManager(gridLayoutManager);
-        categoryList = db.getAllCategories();
-        // make new array for displaying only few item in home
-        homeCatList = new ArrayList<>(categoryList.subList(0, L));
-        if (homeCatList.size() > 0) {
-            categoryAdapter = new HomeCategoryAdapter(getContext(), homeCatList);
-            recyclerCategoryView.setAdapter(categoryAdapter);
-        }
+        DatabaseExecutor.execute(db::getAllCategories, result -> {
+            if (!isAdded()) {
+                return;
+            }
+            categoryList = result;
+            homeCatList = new ArrayList<>(categoryList.subList(0, Math.min(L, categoryList.size())));
+            if (!homeCatList.isEmpty()) {
+                categoryAdapter = new HomeCategoryAdapter(requireContext(), homeCatList);
+                recyclerCategoryView.setAdapter(categoryAdapter);
+            }
+        }, error -> {
+            if (isAdded()) {
+                layoutCategory.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void filter(String text) {

@@ -14,6 +14,7 @@ import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.activity.MainActivity;
 import com.dearyoti.doahindu.adapter.TopicsAdapter;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.model.TopicsModel;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class RecentFragment extends Fragment implements TopicsAdapter.itemInterf
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_recent, container, false);
         init();
-        setAdapter();
+        loadRecent();
         //bannerLoad();
         return view;
     }
@@ -43,18 +44,33 @@ public class RecentFragment extends Fragment implements TopicsAdapter.itemInterf
         db = new DatabaseHelper(getActivity());
         recyclerRecent = view.findViewById(R.id.recycler_recent);
         txtNoData = view.findViewById(R.id.txt_no_data);
+        limitRecent = new ArrayList<>();
 
         recentList = new ArrayList<>();
-        recentList = db.getRecentViewed();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerRecent.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
 
     }
 
+    private void loadRecent() {
+        DatabaseExecutor.execute(db::getRecentViewed, result -> {
+            if (!isAdded()) {
+                return;
+            }
+            recentList = result;
+            setAdapter();
+        }, error -> {
+            if (isAdded()) {
+                recyclerRecent.setVisibility(View.GONE);
+                txtNoData.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     private void setAdapter() {
+        limitRecent = new ArrayList<>();
         if (recentList.size() > 0) {
-            limitRecent = new ArrayList<>();
             for (int i = 0; i < Math.min(10, recentList.size()); i++) {
                 if (recentList.get(i).getLast_viewed() != null && !recentList.get(i).getLast_viewed().isEmpty()) {
                     limitRecent.add(recentList.get(i));
@@ -70,6 +86,9 @@ public class RecentFragment extends Fragment implements TopicsAdapter.itemInterf
                 recyclerRecent.setVisibility(View.GONE);
                 txtNoData.setVisibility(View.VISIBLE);
             }
+        } else {
+            recyclerRecent.setVisibility(View.GONE);
+            txtNoData.setVisibility(View.VISIBLE);
         }
     }
 

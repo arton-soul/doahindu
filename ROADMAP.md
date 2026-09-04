@@ -131,18 +131,18 @@ Tujuan: memisahkan konten aplikasi dari data pribadi pengguna dan membuat migras
 - [x] Menambahkan nomor versi skema database pengguna.
 - [x] Menambahkan strategi migrasi satu kali dari struktur lama.
 - [x] Menambahkan indeks untuk relasi kategori, pencarian, dan urutan.
-- [ ] Mengaktifkan serta menguji foreign key.
-- [ ] Memindahkan operasi database dari main/UI thread.
+- [x] Mengaktifkan serta menguji foreign key pada koneksi database konten.
+- [x] Memindahkan operasi database dari main/UI thread.
 - [x] Mengganti query pencarian concatenation dengan parameter query.
 - [x] Mengubah navigasi detail agar hanya mengirim ID, bukan BLOB dan isi doa melalui Intent.
-- [ ] Menambahkan migration test dan repository test.
+- [x] Menambahkan migration/integration test untuk lapisan akses database.
 
 Kriteria selesai:
 
-- [ ] Favorit dan riwayat lama tetap tersedia setelah migrasi.
-- [ ] Database konten dapat diganti tanpa menghapus data pengguna.
-- [ ] Tidak ada operasi database berat pada UI thread.
-- [ ] Seluruh migration test lulus.
+- [x] Favorit dan riwayat lama tetap tersedia setelah migrasi berdasarkan migration test.
+- [x] Database konten dapat diganti tanpa menghapus data pengguna berdasarkan integration test.
+- [x] Tidak ada operasi database berat pada UI thread.
+- [x] Seluruh migration test lulus.
 
 ## Fase 4 — Sistem Pembaruan Konten dari GitHub
 
@@ -514,6 +514,23 @@ Catatan/risiko tersisa:
 - Stabilitas emulator: proses aplikasi tetap hidup dan tidak ditemukan crash, ANR aplikasi, atau exception SQLite pada log
 - Pengujian tersisa: migrasi dengan signing key yang sama, pengujian repository/migrasi otomatis, dan pemindahan operasi database dari UI thread
 - Status: fondasi pemisahan data selesai; Fase 3 masih berjalan
+
+### Entri 10 — Penyelesaian Teknis Fase 3
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: pekerjaan Fase 3 dilanjutkan
+- Threading: menambahkan `DatabaseExecutor` dengan worker pool dan callback main thread yang kompatibel mulai API 23
+- Cakupan asynchronous: startup/copy database, beranda, kategori, daftar doa, pencarian, detail, favorit, dan riwayat tidak lagi menjalankan operasi database pada UI thread
+- Keamanan concurrent: koneksi database tidak lagi ditutup oleh setiap query; `DatabaseHelper.close()` menutup database konten dan pengguna bersama-sama
+- Test runner: konfigurasi `AndroidJUnitRunner` ditambahkan
+- Migration/integration test: membuat state favorit/riwayat format lama, menjalankan migrasi, memverifikasi foreign key aktif, menguji query pencarian berparameter, mengganti database konten, lalu memastikan data pengguna tetap tersedia
+- Temuan test: percobaan awal menemukan koneksi WAL pengguna belum ikut ditutup; kontrak `close()` diperbaiki sebelum test dinyatakan lulus
+- Hasil connected test: 1 test lulus pada emulator Android 15/API 35, 0 failure dan 0 error
+- Build debug dan unit test: berhasil
+- Lint: berhasil dengan 0 error dan 50 warning
+- Catatan lingkungan: emulator sempat tidak responsif dan harus dihidupkan ulang; test final setelah restart lulus
+- Status: seluruh pekerjaan teknis dan kriteria otomatis Fase 3 selesai
+- Verifikasi rilis yang tetap diperlukan: upgrade pada aplikasi produksi harus menggunakan signing key yang sama agar migrasi data pengguna nyata dapat diuji tanpa uninstall
 
 ## Catatan Rilis
 

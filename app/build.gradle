@@ -10,6 +10,7 @@ android {
         targetSdk 36
         versionCode 12
         versionName "3.4.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {

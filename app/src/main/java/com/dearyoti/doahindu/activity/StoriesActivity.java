@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import com.dearyoti.doahindu.MyApplication;
 import com.dearyoti.doahindu.R;
 import com.dearyoti.doahindu.database.DatabaseHelper;
+import com.dearyoti.doahindu.database.DatabaseExecutor;
 import com.dearyoti.doahindu.model.LatestStoryModel;
 import com.dearyoti.doahindu.model.TopicsModel;
 import com.dearyoti.doahindu.utils.Constant;
@@ -77,24 +78,6 @@ public class StoriesActivity extends AppCompatActivity {
 
     private void init() {
         db = new DatabaseHelper(StoriesActivity.this);
-        if ("from_latest".equals(flag)) {
-            LatestStoryModel latestStory = db.getLatestStoryById(selectedTopicId);
-            if (latestStory != null) {
-                selectedTopicName = latestStory.getTopic_name();
-                selectedTopicStory = latestStory.getTopic_story();
-                imageBytes = latestStory.getTopic_image();
-            }
-        } else {
-            TopicsModel topic = db.getTopicById(selectedTopicId);
-            if (topic != null) {
-                selectedCatId = topic.getCat_id();
-                selectedTopicName = topic.getTopic_name();
-                selectedTopicStory = topic.getTopic_story();
-                imageBytes = topic.getTopic_image();
-            }
-            selectedCatName = db.getCategoryName(selectedCatId);
-        }
-
         Toolbar toolbar = findViewById(R.id.toolbar_stories);
         setSupportActionBar(toolbar);
 
@@ -102,19 +85,10 @@ public class StoriesActivity extends AppCompatActivity {
         TextView toolbarStoriesTitle = findViewById(R.id.toolbar_stories_title);
         toolbar.setTitle("");
 
-        if (flag.equals("from_latest")) {
-            toolbarStoriesTitle.setText("Cerita Hindu");
-        } else {
-            toolbarStoriesTitle.setText("" + selectedCatName);
-        }
-
         txtStoryTitle = findViewById(R.id.txt_story_title);
         txtStory = findViewById(R.id.txt_story);
         fabShare = findViewById(R.id.fab_share);
         imgTopic = findViewById(R.id.img_topic);
-
-        txtStory.setText("" + selectedTopicStory);
-        txtStoryTitle.setText("" + selectedTopicName);
 
         Typeface font_bold = Typeface.createFromAsset(getAssets(), Constant.FONT_PATH_SEMIBOLD);
         toolbarStoriesTitle.setTypeface(font_bold);
@@ -127,11 +101,6 @@ public class StoriesActivity extends AppCompatActivity {
                 getOnBackPressedDispatcher().onBackPressed();
             }
         });
-        if (imageBytes != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-            imgTopic.setImageBitmap(bitmap);
-        }
-
         fabShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,14 +111,53 @@ public class StoriesActivity extends AppCompatActivity {
                 startActivity(sendIntent);
             }
         });
-        if (selectedTopicId != null && selectedTopicId != 0) {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            db.updateLastViewed(selectedTopicId, timestamp.toString());
-        }
+        loadStory(toolbarStoriesTitle);
     }
 
-    private void isFavorite() {
-        if (db.isFavorite(selectedTopicId)) {
+    private void loadStory(TextView toolbarStoriesTitle) {
+        DatabaseExecutor.execute(() -> {
+            if ("from_latest".equals(flag)) {
+                LatestStoryModel latestStory = db.getLatestStoryById(selectedTopicId);
+                if (latestStory != null) {
+                    selectedTopicName = latestStory.getTopic_name();
+                    selectedTopicStory = latestStory.getTopic_story();
+                    imageBytes = latestStory.getTopic_image();
+                }
+            } else {
+                TopicsModel topic = db.getTopicById(selectedTopicId);
+                if (topic != null) {
+                    selectedCatId = topic.getCat_id();
+                    selectedTopicName = topic.getTopic_name();
+                    selectedTopicStory = topic.getTopic_story();
+                    imageBytes = topic.getTopic_image();
+                }
+                selectedCatName = db.getCategoryName(selectedCatId);
+            }
+            if (selectedTopicId != null && selectedTopicId != 0) {
+                db.updateLastViewed(selectedTopicId,
+                        new Timestamp(System.currentTimeMillis()).toString());
+            }
+            return selectedTopicName != null;
+        }, found -> {
+            if (!found || isFinishing() || isDestroyed()) {
+                return;
+            }
+            toolbarStoriesTitle.setText("from_latest".equals(flag)
+                    ? "Cerita Hindu" : selectedCatName);
+            txtStory.setText(selectedTopicStory);
+            txtStoryTitle.setText(selectedTopicName);
+            if (imageBytes != null) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                imgTopic.setImageBitmap(bitmap);
+            }
+        }, error -> finish());
+    }
+
+    private void showFavorite(boolean favorite) {
+        if (navFavorite == null) {
+            return;
+        }
+        if (favorite) {
             navFavorite.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.favorite_select));
             navFavorite.setContentDescription(getString(R.string.action_remove_favorite));
         } else {
@@ -163,25 +171,30 @@ public class StoriesActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_stories, menu);
         MenuItem item = menu.findItem(R.id.nav_stories_fav);
 
-        if (flag.equals("from_latest")) {
+        if ("from_latest".equals(flag)) {
             item.setVisible(false);
         }
         navFavorite = (ImageView) menu.findItem(R.id.nav_stories_fav).getActionView();
-        isFavorite();
+        DatabaseExecutor.execute(() -> db.isFavorite(selectedTopicId), this::showFavorite,
+                error -> showFavorite(false));
         navFavorite.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                if (db.isFavorite(selectedTopicId)) {
-                    if (db.updateFavorite(selectedTopicId, 0)) {
-                        Snackbar.make(view, "Story removed from favorite.", Snackbar.LENGTH_LONG).show();
+                DatabaseExecutor.execute(() -> {
+                    boolean newState = !db.isFavorite(selectedTopicId);
+                    return db.updateFavorite(selectedTopicId, newState ? 1 : 0)
+                            ? newState : null;
+                }, newState -> {
+                    if (newState == null) {
+                        return;
                     }
-                } else {
-                    if (db.updateFavorite(selectedTopicId, 1)) {
-                        Snackbar.make(view, "Story added to favorite.", Snackbar.LENGTH_LONG).show();
-                    }
-                }
-                isFavorite();
+                    showFavorite(newState);
+                    Snackbar.make(view, newState ? "Story added to favorite."
+                                    : "Story removed from favorite.",
+                            Snackbar.LENGTH_LONG).show();
+                }, error -> Snackbar.make(view, "Unable to update favorite.",
+                        Snackbar.LENGTH_LONG).show());
             }
         });
         return true;
