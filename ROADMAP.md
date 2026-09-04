@@ -677,7 +677,8 @@ Catatan/risiko tersisa:
 - GitHub Actions: workflow publikasi run #3 selesai sukses
 - Paket publik: `contentVersion 3` (`content-v3.sqlite`); ukuran dan SHA-256 hasil unduhan cocok dengan manifest
 - Perangkat fisik: APK terbaru berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
-- Verifikasi perangkat tersisa: pemeriksaan otomatis masih dalam interval 24 jam dan MIUI menolak tap ADB; pemilik perlu memilih menu `Perbarui Konten` untuk memasang versi 3 secara manual
+- Verifikasi perangkat: pemilik menjalankan menu `Perbarui Konten`; preferensi Redmi terkonfirmasi `content_version=3`, proses aplikasi aktif, dan tidak ditemukan crash, `SQLiteException`, atau warning penggantian file
+- Status publikasi awal Fase 5: pembaruan database melalui GitHub Pages berhasil diterima perangkat fisik tanpa update APK
 
 ## Catatan Rilis
 
