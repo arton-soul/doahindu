@@ -626,6 +626,17 @@ Catatan/risiko tersisa:
 - Log: tidak ditemukan fatal exception, ANR aplikasi, atau `SQLiteException`
 - Status: smoke test instalasi/peluncuran lulus; alur koleksi favorit dan catatan menunggu verifikasi manual pemilik
 
+### Entri 17 — Perbaikan Warna Teks Input Fase 7A
+
+- Tanggal: 4 September 2026
+- Persetujuan pemilik: perbaikan warna teks disetujui
+- Akar masalah: tema memaksa `android:editTextColor` menjadi putih sehingga teks tidak terlihat pada dialog berlatar terang
+- Perbaikan: warna input menggunakan `text_color` dan warna hint menggunakan `light_text_color`; keduanya memiliki varian mode terang dan gelap
+- Build debug dan lint: berhasil; lint 0 error dan 55 warning
+- Perangkat: APK berhasil dipasang sebagai upgrade pada Redmi Note 8 Pro tanpa menghapus data
+- Smoke test: aplikasi berhasil dibuka, proses aktif, dan tidak ditemukan crash, ANR, atau `SQLiteException`
+- Verifikasi tersisa: pemilik memeriksa keterbacaan teks saat mengetik nama koleksi dan catatan pada perangkat
+
 ## Catatan Rilis
 
 Belum ada perubahan aplikasi yang siap dirilis. Bagian ini akan diisi setelah implementasi dan verifikasi dimulai.

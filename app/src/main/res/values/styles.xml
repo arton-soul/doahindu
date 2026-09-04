@@ -10,7 +10,8 @@
         <item name="windowActionBar">false</item>
         <!-- Custom fonts. -->
         <item name="fontFamily">@font/montserrat_medium</item>
-        <item name="android:editTextColor">@color/white</item>
+        <item name="android:editTextColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/light_text_color</item>
         <item name="searchViewStyle">@style/MySearchView</item>
 
     </style>
