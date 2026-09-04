@@ -15,6 +15,10 @@ Alur publikasi yang disiapkan:
 5. Aplikasi memeriksa manifest maksimal sekali setiap 24 jam atau saat pengguna
    memilih menu **Perbarui Konten**.
 
+Nomor `contentVersion` mengikuti nomor eksekusi workflow. Perubahan database,
+workflow, atau dokumen ini memicu publikasi baru; tombol **Run workflow** juga
+dapat digunakan untuk pengujian tanpa mengubah database sumber.
+
 Sebelum rilis, aktifkan GitHub Pages dengan sumber **GitHub Actions**. Endpoint
 produksi yang telah dikonfigurasi pada `app/build.gradle` adalah:
 
