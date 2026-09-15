@@ -6,6 +6,8 @@ on:
     branches: [master, main]
     paths:
       - app/src/main/assets/doahindu1.sqlite
+      - content/source/**
+      - content/tools/**
       - .github/workflows/publish-content.yml
       - content/README.md
 
@@ -26,6 +28,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Validate editorial CSV and parser
+        run: |
+          node --no-warnings --test content/tools/*.test.mjs
+          node --no-warnings content/tools/convert-content-csv.mjs --check-base
 
       - name: Validate database and create manifest
         env:
@@ -55,6 +66,8 @@ jobs:
               "tbl_category": {"cat_id", "cat_name", "cat_image"},
               "tbl_topics": {"topic_id", "cat_id", "topic_name", "topic_image", "topic_stories"},
               "tbl_latest_story": {"topic_id", "topic_name", "topic_image", "topic_stories"},
+              "tbl_content_sections": {"topic_id", "section_number", "section_title", "section_text", "sort_order"},
+              "tbl_daily_quotes": {"quote_id", "topic_id", "section_number", "quote_text", "attribution", "active", "sort_order"},
           }
           for table, columns in required.items():
               actual = {row[1] for row in cursor.execute(f"PRAGMA table_info({table})")}
@@ -68,6 +81,47 @@ jobs:
           ).fetchone()[0]
           assert duplicates == 0, "Duplicate topic_id values found"
           assert orphans == 0, "Topics referencing missing categories found"
+          section_duplicates = cursor.execute(
+              "SELECT COUNT(*) FROM (SELECT topic_id,section_number FROM tbl_content_sections "
+              "GROUP BY topic_id,section_number HAVING COUNT(*) > 1)"
+          ).fetchone()[0]
+          section_sort_duplicates = cursor.execute(
+              "SELECT COUNT(*) FROM (SELECT topic_id,sort_order FROM tbl_content_sections "
+              "GROUP BY topic_id,sort_order HAVING COUNT(*) > 1)"
+          ).fetchone()[0]
+          section_orphans = cursor.execute(
+              "SELECT COUNT(*) FROM tbl_content_sections s LEFT JOIN tbl_topics t "
+              "ON t.topic_id=s.topic_id WHERE t.topic_id IS NULL"
+          ).fetchone()[0]
+          invalid_sequences = cursor.execute(
+              "SELECT COUNT(*) FROM (SELECT topic_id,COUNT(*) amount,MIN(section_number) first_number,"
+              "MAX(section_number) last_number FROM tbl_content_sections GROUP BY topic_id "
+              "HAVING first_number<>1 OR last_number<>amount)"
+          ).fetchone()[0]
+          invalid_sections = cursor.execute(
+              "SELECT COUNT(*) FROM tbl_content_sections WHERE section_number<1 OR sort_order<1 "
+              "OR trim(section_text)=''"
+          ).fetchone()[0]
+          quote_duplicates = cursor.execute(
+              "SELECT COUNT(*) FROM (SELECT topic_id,section_number FROM tbl_daily_quotes "
+              "GROUP BY topic_id,section_number HAVING COUNT(*) > 1)"
+          ).fetchone()[0]
+          quote_orphans = cursor.execute(
+              "SELECT COUNT(*) FROM tbl_daily_quotes q LEFT JOIN tbl_content_sections s "
+              "ON s.topic_id=q.topic_id AND s.section_number=q.section_number WHERE s.topic_id IS NULL"
+          ).fetchone()[0]
+          invalid_quotes = cursor.execute(
+              "SELECT COUNT(*) FROM tbl_daily_quotes WHERE active NOT IN (0,1) OR sort_order<1 "
+              "OR trim(quote_text)='' OR trim(attribution)=''"
+          ).fetchone()[0]
+          assert section_duplicates == 0, "Duplicate section numbers found"
+          assert section_sort_duplicates == 0, "Duplicate section sort orders found"
+          assert section_orphans == 0, "Sections referencing missing topics found"
+          assert invalid_sequences == 0, "Non-contiguous section numbering found"
+          assert invalid_sections == 0, "Invalid or empty sections found"
+          assert quote_duplicates == 0, "Duplicate quote sources found"
+          assert quote_orphans == 0, "Quotes referencing missing sections found"
+          assert invalid_quotes == 0, "Invalid quote rows found"
           cursor.execute("PRAGMA user_version=1")
           connection.commit()
           connection.close()
